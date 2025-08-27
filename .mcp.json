@@ -1,0 +1,40 @@
+{
+    "mcpServers": {
+      "fetch": {
+        "type": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "mcp-server-fetch-typescript"
+        ],
+        "env": {}
+      },
+      "browsermcp": {
+        "type": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@browsermcp/mcp@latest"
+        ],
+        "env": {}
+      },
+      "context7": {
+        "type": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@upstash/context7-mcp@latest"
+        ],
+        "env": {}
+      },
+      "playwright": {
+        "type": "stdio",
+        "command": "npx",
+        "args": [
+          "-y",
+          "@playwright/mcp@latest"
+        ],
+        "env": {}
+      }
+    }
+  }  
