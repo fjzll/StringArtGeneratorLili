@@ -154,7 +154,7 @@ export async function optimizeStringArt(
   pinCoords: PinCoordinate[],
   lineCache: LineCache,
   params: StringArtParameters,
-  onProgress?: (progress: OptimizationProgress) => void
+  onProgress?: (progress: OptimizationProgress, currentLineSequence?: number[], pinCoordinates?: PinCoordinate[]) => void
 ): Promise<{
   lineSequence: number[];
   totalThreadLength: number;
@@ -205,8 +205,10 @@ export async function optimizeStringArt(
 
     currentPin = bestPin;
 
-    // Report progress
-    if (onProgress && lineIndex % DEFAULT_CONFIG.OPTIMIZATION_BATCH_SIZE === 0) {
+    // Report progress (every 10 lines like original, not every OPTIMIZATION_BATCH_SIZE)
+    if (onProgress && (lineIndex % 10 === 0 || lineIndex === params.numberOfLines - 1)) {
+      console.log(`Line ${lineIndex + 1}/${params.numberOfLines}: Calling progress callback`)
+      
       const progress: OptimizationProgress = {
         linesDrawn: lineIndex + 1,
         totalLines: params.numberOfLines,
@@ -216,7 +218,8 @@ export async function optimizeStringArt(
         threadLength: totalThreadLength,
       };
       
-      onProgress(progress);
+      // Pass current line sequence and pin coordinates for progressive drawing
+      onProgress(progress, [...lineSequence], pinCoords);
       
       // Yield control to prevent blocking
       await new Promise(resolve => setTimeout(resolve, 0));

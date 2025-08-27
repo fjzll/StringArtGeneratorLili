@@ -50,13 +50,33 @@ function App() {
               minDistance: Math.max(2, Math.floor(numberOfPins / 36)), // Dynamic based on pins
               imgSize,
             },
-            (progressUpdate) => {
+            (progressUpdate, currentLineSequence, pinCoordinates) => {
+              // Update React state for progress bar
               setProgress(progressUpdate)
+              
+              // Progressive drawing: update canvas when we get progress updates  
+              if (currentLineSequence && pinCoordinates) {
+                console.log(`[PROGRESS CALLBACK] Line ${progressUpdate.linesDrawn}/${progressUpdate.totalLines}: Drawing ${progressUpdate.linesDrawn} lines`)
+                
+                // Force immediate canvas update using requestAnimationFrame to ensure it's rendered
+                requestAnimationFrame(() => {
+                  drawProgressiveLines(currentLineSequence, pinCoordinates, imgSize, progressUpdate.linesDrawn)
+                })
+              } else {
+                console.log(`[PROGRESS CALLBACK] Line ${progressUpdate.linesDrawn}/${progressUpdate.totalLines}: No data to draw`, {
+                  hasSequence: !!currentLineSequence,
+                  hasCoords: !!pinCoordinates,
+                  sequenceLength: currentLineSequence?.length,
+                  coordsLength: pinCoordinates?.length
+                })
+              }
             }
           )
 
           setResult(stringArtResult)
-          drawResult(stringArtResult)
+          
+          // Final result should already be drawn by the last progress callback
+          console.log('[GENERATION COMPLETE] String art generation finished')
         } catch (error) {
           console.error('Generation failed:', error)
           setError(error instanceof Error ? error.message : 'Unknown error occurred')
@@ -71,7 +91,8 @@ function App() {
     }
   }
 
-  const drawResult = (result: StringArtResult) => {
+  // Initialize canvas with background and pins
+  const initializeCanvas = (pinCoordinates?: any[]) => {
     const canvas = canvasRef.current
     if (!canvas) return
 
@@ -83,8 +104,7 @@ function App() {
     ctx.fillStyle = 'white'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
-    // Match original scaling: SCALE = 20 in original, but we adapt to canvas size
-    const scale = canvas.width / result.parameters.imgSize
+    const scale = canvas.width / imgSize
     const center = canvas.width / 2
 
     // Draw circle boundary (lighter)
@@ -94,32 +114,97 @@ function App() {
     ctx.arc(center, center, (canvas.width / 2) - 5, 0, Math.PI * 2)
     ctx.stroke()
 
-    // Draw string lines with balanced opacity
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)' // Reduced from 0.4 to 0.15 - much lighter
-    ctx.lineWidth = 1.0 // Reduced from 1.5 to 1.0
-    ctx.lineCap = 'round' // Smoother line endings
-    ctx.lineJoin = 'round'
-    
-    // Use source-over for normal blending (no multiply - that was too dark)
-    ctx.globalCompositeOperation = 'source-over'
-    
-    for (let i = 0; i < result.lineSequence.length - 1; i++) {
-      const pin1 = result.pinCoordinates[result.lineSequence[i]]
-      const pin2 = result.pinCoordinates[result.lineSequence[i + 1]]
-      
-      ctx.beginPath()
-      ctx.moveTo(pin1[0] * scale, pin1[1] * scale)
-      ctx.lineTo(pin2[0] * scale, pin2[1] * scale)
-      ctx.stroke()
+    // Draw pins if provided
+    if (pinCoordinates) {
+      ctx.fillStyle = 'rgba(255, 0, 0, 0.6)'
+      pinCoordinates.forEach(([x, y]) => {
+        if (x !== undefined && y !== undefined) {
+          ctx.beginPath()
+          ctx.arc(x * scale, y * scale, 1.5, 0, Math.PI * 2)
+          ctx.fill()
+        }
+      })
     }
 
-    // Draw pins (smaller and less prominent)
+    return { ctx, scale }
+  }
+
+  // Progressive line drawing (called every 10 lines during generation)
+  const drawProgressiveLines = (lineSequence: number[], pinCoordinates: any[], currentImgSize: number, upToLineIndex: number) => {
+    console.log(`[DRAW START] Called drawProgressiveLines: upToLineIndex=${upToLineIndex}, sequenceLength=${lineSequence?.length}`)
+    
+    const canvas = canvasRef.current
+    if (!canvas || !lineSequence || !pinCoordinates) {
+      console.log('[DRAW ERROR] Canvas or data missing:', { 
+        canvas: !!canvas, 
+        lineSequence: !!lineSequence, 
+        pinCoordinates: !!pinCoordinates,
+        sequenceLength: lineSequence?.length,
+        coordsLength: pinCoordinates?.length
+      })
+      return
+    }
+
+    console.log(`[DRAW PROGRESS] Drawing ${upToLineIndex} lines from sequence of ${lineSequence.length}`)
+
+    const ctx = canvas.getContext('2d')!
+    canvas.width = 600
+    canvas.height = 600
+    const scale = canvas.width / currentImgSize
+
+    // Clear and redraw from scratch (like original cv.imshow)
+    ctx.fillStyle = 'white'
+    ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+    const center = canvas.width / 2
+
+    // Redraw circle boundary
+    ctx.strokeStyle = '#eee'
+    ctx.lineWidth = 1
+    ctx.beginPath()
+    ctx.arc(center, center, (canvas.width / 2) - 5, 0, Math.PI * 2)
+    ctx.stroke()
+
+    // Draw all lines up to current progress
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)'
+    ctx.lineWidth = 1.0
+    ctx.lineCap = 'round'
+    ctx.lineJoin = 'round'
+    ctx.globalCompositeOperation = 'source-over'
+    
+    const linesToDraw = Math.min(upToLineIndex, lineSequence.length - 1)
+    console.log(`[DRAW LINES] Actually drawing ${linesToDraw} lines`)
+    
+    for (let i = 0; i < linesToDraw; i++) {
+      const pin1Index = lineSequence[i]
+      const pin2Index = lineSequence[i + 1]
+      const pin1 = pinCoordinates[pin1Index]
+      const pin2 = pinCoordinates[pin2Index]
+      
+      if (pin1 && pin2 && pin1[0] !== undefined && pin1[1] !== undefined) {
+        ctx.beginPath()
+        ctx.moveTo(pin1[0] * scale, pin1[1] * scale)
+        ctx.lineTo(pin2[0] * scale, pin2[1] * scale)
+        ctx.stroke()
+      }
+    }
+
+    // Draw pins on top
     ctx.fillStyle = 'rgba(255, 0, 0, 0.6)'
-    result.pinCoordinates.forEach(([x, y]) => {
-      ctx.beginPath()
-      ctx.arc(x * scale, y * scale, 1.5, 0, Math.PI * 2)
-      ctx.fill()
+    pinCoordinates.forEach(([x, y]) => {
+      if (x !== undefined && y !== undefined) {
+        ctx.beginPath()
+        ctx.arc(x * scale, y * scale, 1.5, 0, Math.PI * 2)
+        ctx.fill()
+      }
     })
+    
+    console.log(`[DRAW COMPLETE] Finished drawing ${linesToDraw} lines on canvas`)
+  }
+
+  const drawResult = (result: StringArtResult) => {
+    console.log('Drawing final result:', result.lineSequence.length, 'lines')
+    drawProgressiveLines(result.lineSequence, result.pinCoordinates, result.parameters.imgSize, result.lineSequence.length - 1)
   }
 
   return (

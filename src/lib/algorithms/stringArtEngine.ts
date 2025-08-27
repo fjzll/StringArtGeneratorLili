@@ -15,7 +15,7 @@ import { DEFAULT_CONFIG } from '../utils/constants';
 export async function generateStringArt(
   imageElement: HTMLImageElement,
   params: Partial<StringArtParameters> = {},
-  onProgress?: (progress: OptimizationProgress) => void
+  onProgress?: (progress: OptimizationProgress, currentLineSequence?: number[], pinCoordinates?: any[]) => void
 ): Promise<StringArtResult> {
   const startTime = Date.now();
 
