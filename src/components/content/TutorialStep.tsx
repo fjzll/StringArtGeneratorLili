@@ -42,24 +42,6 @@ export function TutorialStep({ step }: TutorialStepProps) {
         {/* Main Content */}
         <p className="text-base leading-relaxed">{step.content}</p>
 
-        {/* Tips Section */}
-        {step.tips.length > 0 && (
-          <div className="bg-blue-50 dark:bg-blue-950/30 rounded-lg p-4">
-            <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-3 flex items-center gap-2">
-              <Lightbulb className="h-4 w-4" />
-              Quick Tips
-            </h4>
-            <ul className="space-y-2">
-              {step.tips.map((tip, index) => (
-                <li key={index} className="flex items-start gap-2 text-sm text-blue-800 dark:text-blue-200">
-                  <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5 text-blue-600 dark:text-blue-400" />
-                  {tip}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-
         {/* Expandable Section */}
         {step.expandable && (
           <div className="border-t border-border pt-6">
@@ -78,6 +60,25 @@ export function TutorialStep({ step }: TutorialStepProps) {
 
             {isExpanded && (
               <div className="mt-6 space-y-6 animate-fade-in">
+                {/* Quick Tips Section - now inside expandable area */}
+                {step.tips.length > 0 && (
+                  <div className="bg-blue-50 dark:bg-blue-950/30 rounded-lg p-4">
+                    <h4 className="font-medium text-blue-900 dark:text-blue-100 mb-3 flex items-center gap-2">
+                      <Lightbulb className="h-4 w-4" />
+                      Quick Tips
+                    </h4>
+                    <ul className="space-y-2">
+                      {step.tips.map((tip, index) => (
+                        <li key={index} className="flex items-start gap-2 text-sm text-blue-800 dark:text-blue-200">
+                          <CheckCircle2 className="h-4 w-4 shrink-0 mt-0.5 text-blue-600 dark:text-blue-400" />
+                          {tip}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Detailed Content Sections */}
                 {step.expandable.content.map((section, index) => (
                   <div key={index} className="bg-muted/50 rounded-lg p-6">
                     <h5 className="font-semibold text-foreground mb-3">

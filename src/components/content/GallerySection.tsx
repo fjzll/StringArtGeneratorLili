@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { ContentSection } from "@/components/layout"
 import { ExampleCard } from "./ExampleCard"
 
@@ -125,51 +124,52 @@ export function GallerySection() {
   const activeCategoryData = galleryData.categories.find(cat => cat.id === activeCategory) || galleryData.categories[0]
 
   return (
-    <ContentSection id="gallery" className="space-y-12">
+    <ContentSection id="gallery" className="space-y-20 py-12">
       {/* Header */}
-      <div className="text-center space-y-4">
+      <div className="text-center space-y-4 mb-16">
         <h2 className="text-3xl md:text-4xl font-bold">{galleryData.title}</h2>
-        <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-          {galleryData.subtitle}
-        </p>
       </div>
-
-      {/* Category Filter */}
-      <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
-        {galleryData.categories.map((category) => (
-          <Button
-            key={category.id}
-            variant={activeCategory === category.id ? "default" : "outline"}
-            onClick={() => setActiveCategory(category.id)}
-            className="flex items-center gap-2 transition-all duration-200"
-          >
-            <span className="text-lg">{category.icon}</span>
-            <span className="hidden sm:inline">{category.name}</span>
-            <span className="sm:hidden">{category.name.split(' ')[0]}</span>
-          </Button>
-        ))}
-      </div>
-
-      {/* Active Category Description */}
-      {activeCategoryData && (
-        <div className="text-center">
-          <Card className="glass-effect max-w-2xl mx-auto">
-            <CardContent className="p-6">
-              <h3 className="text-xl font-semibold mb-2 flex items-center justify-center gap-2">
-                <span className="text-2xl">{activeCategoryData.icon}</span>
-                {activeCategoryData.name}
-              </h3>
-              <p className="text-muted-foreground">{activeCategoryData.description}</p>
-            </CardContent>
-          </Card>
-        </div>
-      )}
 
       {/* Gallery Examples */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        {activeCategoryData.examples.map((example) => (
-          <ExampleCard key={example.id} example={example} />
-        ))}
+      <div className="flex justify-center px-4">
+        <div className="w-full max-w-2xl">
+          {activeCategoryData.examples.map((example) => (
+            <div key={example.id} className="mb-12">
+              <ExampleCard example={example} categoryName={activeCategoryData.name} />
+              
+              {/* Dot Navigation positioned under the string art (centered) */}
+              <div className="grid grid-cols-2 mt-4">
+                <div></div>
+                <div className="flex justify-center items-center gap-3">
+                  {galleryData.categories.map((category) => (
+                    <button
+                      key={category.id}
+                      onClick={() => setActiveCategory(category.id)}
+                      className={`
+                        relative w-3 h-3 rounded-full transition-all duration-300 hover:scale-125 group
+                        ${activeCategory === category.id 
+                          ? 'bg-primary' 
+                          : 'bg-muted-foreground/30 hover:bg-muted-foreground/50'
+                        }
+                      `}
+                      aria-label={`View ${category.name} examples`}
+                    >
+                      {/* Tooltip */}
+                      <div className="absolute bottom-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+                        <div className="bg-popover text-popover-foreground text-xs px-2 py-1 rounded-md shadow-md whitespace-nowrap border">
+                          <div className="flex items-center gap-1">
+                            <span>{category.icon}</span>
+                            <span>{category.name}</span>
+                          </div>
+                        </div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Inspiration Tips */}

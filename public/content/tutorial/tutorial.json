@@ -135,22 +135,5 @@
       "Click 'Generate String Art'",
       "Watch your masterpiece emerge!"
     ]
-  },
-  "troubleshooting": {
-    "title": "Common Issues",
-    "items": [
-      {
-        "problem": "Result is too light/faint",
-        "solution": "Try the 'Bold Impact' preset or increase the number of lines in advanced settings"
-      },
-      {
-        "problem": "Generation takes too long", 
-        "solution": "Use fewer pins or lines, or try a smaller canvas size for faster processing"
-      },
-      {
-        "problem": "Image doesn't look recognizable",
-        "solution": "Choose a higher contrast image or try the 'Fine Detail' preset for more precision"
-      }
-    ]
   }
 }
