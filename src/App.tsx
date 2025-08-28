@@ -48,7 +48,6 @@ function App() {
   
   // UI State
   const [showFoundationTest, setShowFoundationTest] = useState(false)
-  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false)
   const [selectedPreset, setSelectedPreset] = useState<string>('fine')
   
   // Refs
@@ -231,11 +230,9 @@ function App() {
             title: "Generation Failed",
             description: errorMessage,
             variant: "destructive",
-            action: {
-              altText: "Try again",
-              onClick: () => generateArt(),
-              children: "Retry"
-            }
+            action: (
+              <button onClick={() => generateArt()}>Retry</button>
+            )
           })
         } finally {
           setIsProcessing(false)
@@ -285,14 +282,14 @@ function App() {
     const center = canvas.width / 2
 
     // Circle boundary
-    ctx.strokeStyle = 'hsl(var(--border))'
+    ctx.strokeStyle = '#e5e7eb' // Light gray border
     ctx.lineWidth = 1
     ctx.beginPath()
     ctx.arc(center, center, (canvas.width / 2) - 5, 0, Math.PI * 2)
     ctx.stroke()
 
     // Draw lines
-    ctx.strokeStyle = 'hsl(var(--foreground) / 0.15)'
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)' // Semi-transparent black lines
     ctx.lineWidth = 1.0
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
@@ -314,7 +311,7 @@ function App() {
     }
 
     // Draw pins
-    ctx.fillStyle = 'hsl(var(--primary) / 0.6)'
+    ctx.fillStyle = 'rgba(34, 139, 230, 0.6)' // Semi-transparent blue pins
     pinCoordinates.forEach(([x, y]) => {
       if (x !== undefined && y !== undefined) {
         ctx.beginPath()
