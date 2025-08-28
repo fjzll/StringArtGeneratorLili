@@ -1,68 +1,143 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    /* Apple-style light theme colors */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+    
+    /* Apple blue primary */
+    --primary: 221 83% 53%;
+    --primary-foreground: 0 0% 98%;
+    
+    /* Apple gray secondary */
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
+    
+    /* Apple red destructive */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    
+    /* Muted backgrounds */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    
+    /* Apple system accents */
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    
+    /* Form inputs */
+    --input: 214.3 31.8% 91.4%;
+    --border: 214.3 31.8% 91.4%;
+    --ring: 221 83% 53%;
+    
+    /* Border radius */
+    --radius: 12px;
   }
-  a:hover {
-    color: #747bff;
+
+  .dark {
+    /* Apple-style dark theme colors */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    
+    /* Apple blue primary (slightly brighter in dark) */
+    --primary: 217 91% 60%;
+    --primary-foreground: 222.2 84% 4.9%;
+    
+    /* Dark gray secondary */
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 0 0% 98%;
+    
+    /* Apple red destructive */
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    
+    /* Dark muted backgrounds */
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+    
+    /* Dark accents */
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 0 0% 98%;
+    
+    /* Dark form inputs */
+    --input: 217.2 32.6% 17.5%;
+    --border: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 94.1%;
   }
-  button {
-    background-color: #f9f9f9;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    min-height: 100vh;
+    margin: 0;
+  }
+
+  /* Apple-style focus rings */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Apple-style selection */
+  ::selection {
+    background-color: hsl(var(--primary) / 0.1);
+  }
+}
+
+@layer components {
+  /* iOS-style glass effect */
+  .glass-effect {
+    backdrop-filter: blur(20px);
+    background-color: hsla(var(--background) / 0.8);
+    border: 1px solid hsla(var(--border) / 0.2);
+  }
+
+  /* Apple-style card hover */
+  .card-hover {
+    @apply transition-all duration-200 ease-out;
+    @apply hover:shadow-lg hover:shadow-black/5;
+    @apply hover:-translate-y-0.5;
+  }
+
+  /* Subtle button press effect */
+  .button-press {
+    @apply transition-transform duration-100 ease-out;
+    @apply active:scale-95;
+  }
+
+  /* Apple-style section spacing */
+  .section-spacing {
+    @apply py-16 md:py-24 lg:py-32;
+  }
+
+  /* Container with Apple-style max width */
+  .container-apple {
+    @apply container mx-auto px-4 sm:px-6 lg:px-8;
+    max-width: 1200px;
   }
 }
