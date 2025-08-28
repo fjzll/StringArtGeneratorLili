@@ -1,0 +1,133 @@
+{
+  "title": "Frequently Asked Questions",
+  "description": "Find answers to common questions about string art generation",
+  "categories": [
+    {
+      "id": "getting-started",
+      "name": "Getting Started",
+      "description": "Basic questions for new users",
+      "icon": "play-circle"
+    },
+    {
+      "id": "technical", 
+      "name": "Technical",
+      "description": "How the algorithms and settings work",
+      "icon": "settings"
+    },
+    {
+      "id": "troubleshooting",
+      "name": "Troubleshooting", 
+      "description": "Common issues and solutions",
+      "icon": "help-circle"
+    },
+    {
+      "id": "advanced",
+      "name": "Advanced",
+      "description": "Tips for experienced users",
+      "icon": "zap"
+    }
+  ],
+  "items": [
+    {
+      "id": "what-is-string-art",
+      "question": "What is string art and how does this generator work?",
+      "answer": "String art is a traditional craft where thread is wound between pins to create images. Our generator uses computer algorithms to analyze your photo and calculate the optimal sequence of lines between pins that will recreate your image using just thread. The result is a pattern you can follow to create physical string art.",
+      "category": "getting-started",
+      "tags": ["basics", "explanation", "how-it-works"],
+      "order": 1,
+      "isPopular": true
+    },
+    {
+      "id": "what-images-work-best",
+      "question": "What types of images work best for string art?",
+      "answer": "High contrast images with clear light and dark areas work best. Portraits, architectural photos, and images with defined shadows produce excellent results. Avoid very busy or low-contrast images as they may not translate well to the limited resolution of string art.",
+      "category": "getting-started", 
+      "tags": ["image-selection", "tips", "quality"],
+      "order": 2,
+      "isPopular": true
+    },
+    {
+      "id": "how-many-pins",
+      "question": "How many pins should I use?",
+      "answer": "For beginners, start with 144-216 pins for a good balance of detail and complexity. More pins (288-360) allow finer detail but require more precision. Fewer pins (36-120) create bold, minimalist designs that are easier to recreate physically.",
+      "category": "technical",
+      "tags": ["pins", "settings", "difficulty"],
+      "order": 3,
+      "isPopular": true
+    },
+    {
+      "id": "generation-time",
+      "question": "Why does generation take so long?",
+      "answer": "The algorithm considers thousands of possible lines to find the optimal sequence. More pins and lines exponentially increase computation time. Generation typically takes 30 seconds to 2 minutes depending on your settings and device performance.",
+      "category": "technical",
+      "tags": ["performance", "time", "algorithm"],
+      "order": 4
+    },
+    {
+      "id": "mobile-support",
+      "question": "Does this work on mobile devices?",
+      "answer": "Yes! The generator is fully responsive and works on phones and tablets. However, complex generations with many pins and lines may be slower on mobile devices. We recommend starting with simpler settings on mobile.",
+      "category": "technical",
+      "tags": ["mobile", "compatibility", "performance"],
+      "order": 5
+    },
+    {
+      "id": "blank-result",
+      "question": "Why is my result blank or very light?",
+      "answer": "This usually means your image has low contrast or the settings don't match your image type. Try increasing the line weight, adding more lines, or choosing an image with stronger contrast between light and dark areas.",
+      "category": "troubleshooting",
+      "tags": ["blank", "light", "contrast"],
+      "order": 6,
+      "isPopular": true
+    },
+    {
+      "id": "too-dark",
+      "question": "My string art is too dark or heavy?",
+      "answer": "Reduce the number of lines, decrease the line weight, or increase the minimum distance between pins. Dark, high-contrast images often need fewer lines to look good as string art.",
+      "category": "troubleshooting", 
+      "tags": ["dark", "heavy", "adjustment"],
+      "order": 7
+    },
+    {
+      "id": "save-project",
+      "question": "Can I save my project and settings?",
+      "answer": "Currently, you can download your generated string art as an image. Project saving and settings management features are planned for future updates. Bookmark the page with your settings in the URL for now.",
+      "category": "advanced",
+      "tags": ["save", "project", "settings"],
+      "order": 8
+    },
+    {
+      "id": "physical-recreation",
+      "question": "How do I recreate this physically?",
+      "answer": "You'll need a circular frame, pins/nails, and thread. Mark pin positions evenly around your frame, then follow the generated line sequence, winding thread from pin to pin in order. The downloadable result shows the complete pattern.",
+      "category": "advanced",
+      "tags": ["physical", "recreation", "materials"],
+      "order": 9,
+      "isPopular": true
+    },
+    {
+      "id": "thread-length",
+      "question": "How much thread do I need?",
+      "answer": "The generator shows estimated thread length in the results. Generally, you'll need 200-1000 inches of thread depending on your settings. We recommend having 20% extra thread to account for mistakes and adjustments.",
+      "category": "advanced",
+      "tags": ["thread", "length", "materials"],
+      "order": 10
+    },
+    {
+      "id": "file-size-limit",
+      "question": "What's the maximum file size for uploads?",
+      "answer": "Images up to 10MB are supported. Larger images are automatically resized for optimal performance. Very large files may take longer to process initially.",
+      "category": "technical",
+      "tags": ["file-size", "upload", "limits"],
+      "order": 11
+    },
+    {
+      "id": "browser-compatibility", 
+      "question": "Which browsers are supported?",
+      "answer": "Modern browsers including Chrome, Firefox, Safari, and Edge are fully supported. Internet Explorer is not supported due to its lack of modern web features required for image processing.",
+      "category": "technical",
+      "tags": ["browsers", "compatibility", "support"],
+      "order": 12
+    }
+  ]
+}

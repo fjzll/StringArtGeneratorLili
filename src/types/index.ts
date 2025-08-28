@@ -48,3 +48,16 @@ export type {
   WorkerStatus,
   WorkerState,
 } from './worker';
+
+// Content types
+export type {
+  TutorialStep,
+  TutorialSection,
+  GalleryExample,
+  GallerySection,
+  FAQItem,
+  FAQSection,
+  AppContent,
+  ContentLoadState,
+  AssetInfo,
+} from './content';

@@ -1,0 +1,71 @@
+{
+  "id": "string-art-tutorial",
+  "title": "How String Art Works",
+  "description": "Learn the fascinating process behind creating beautiful string art from your photos",
+  "steps": [
+    {
+      "id": "what-is-string-art",
+      "title": "What is String Art?",
+      "description": "Discover the art form that transforms images into intricate thread patterns",
+      "content": "String art is a traditional craft that creates images using colored thread wound around pins or nails. Our generator uses advanced algorithms to convert your photos into patterns that can be recreated with string, producing stunning wall art with just thread and pins.",
+      "animation": "/tutorial/string-art-intro.gif",
+      "duration": 3000,
+      "order": 1
+    },
+    {
+      "id": "pin-placement",
+      "title": "Pin Placement",
+      "description": "How pins are positioned around the circular frame",
+      "content": "The first step is placing pins evenly around a circular frame. More pins allow for finer detail but increase complexity. Our algorithm calculates the optimal spacing for your chosen pin count, typically between 36-360 pins.",
+      "animation": "/tutorial/pin-placement.gif",
+      "duration": 2500,
+      "order": 2,
+      "isInteractive": true,
+      "interactiveConfig": {
+        "pins": 144,
+        "lines": 100,
+        "weight": 15
+      }
+    },
+    {
+      "id": "image-processing",
+      "title": "Image Processing",
+      "description": "How your photo is prepared for string art generation",
+      "content": "Your image is converted to grayscale and cropped to a perfect circle. The algorithm analyzes light and dark areas to determine where threads should be placed for the best resemblance to your original photo.",
+      "animation": "/tutorial/image-processing.gif",
+      "duration": 2000,
+      "order": 3
+    },
+    {
+      "id": "line-optimization",
+      "title": "Line Optimization",
+      "description": "The magic behind choosing which pins to connect",
+      "content": "Using a greedy optimization algorithm, the generator finds the best sequence of lines between pins. Each line is chosen to maximize the improvement to the overall image resemblance, creating darker areas where multiple lines overlap.",
+      "animation": "/tutorial/line-optimization.gif",
+      "duration": 4000,
+      "order": 4
+    },
+    {
+      "id": "threading-process",
+      "title": "Threading Process",
+      "description": "How the final artwork comes together",
+      "content": "Lines are drawn progressively from pin to pin in the calculated sequence. You'll see your image emerge gradually as each thread is virtually 'wound' around the frame. The result is a beautiful piece of art that can be recreated physically.",
+      "animation": "/tutorial/threading-process.gif",
+      "duration": 3500,
+      "order": 5
+    },
+    {
+      "id": "parameter-effects",
+      "title": "Parameter Effects",
+      "description": "How different settings affect your final artwork",
+      "content": "Adjusting parameters dramatically changes your result: More pins create finer detail, more lines make darker images, and higher weights create bolder contrasts. Experiment with settings to achieve your desired artistic effect.",
+      "order": 6,
+      "isInteractive": true,
+      "interactiveConfig": {
+        "pins": 288,
+        "lines": 2000,
+        "weight": 25
+      }
+    }
+  ]
+}

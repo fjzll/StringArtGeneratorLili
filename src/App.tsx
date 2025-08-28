@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { generateStringArt } from './lib/algorithms/stringArtEngine'
 import type { StringArtResult, OptimizationProgress } from './types'
+import { FoundationTest } from './components/test/FoundationTest'
 
 function App() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
@@ -16,6 +17,9 @@ function App() {
   const [numberOfLines, setNumberOfLines] = useState(4000)
   const [lineWeight, setLineWeight] = useState(20)
   const [imgSize, setImgSize] = useState(500)
+  
+  // Test mode for Phase 2A testing
+  const [showFoundationTest, setShowFoundationTest] = useState(false)
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0]
@@ -207,9 +211,36 @@ function App() {
     drawProgressiveLines(result.lineSequence, result.pinCoordinates, result.parameters.imgSize, result.lineSequence.length - 1)
   }
 
+  // Show Foundation Test if in test mode
+  if (showFoundationTest) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="fixed top-4 right-4 z-10">
+          <button 
+            onClick={() => setShowFoundationTest(false)}
+            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+          >
+            Back to App
+          </button>
+        </div>
+        <FoundationTest />
+      </div>
+    )
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-6xl mx-auto">
+        {/* Test Mode Toggle */}
+        <div className="fixed top-4 right-4 z-10">
+          <button 
+            onClick={() => setShowFoundationTest(true)}
+            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+          >
+            Phase 2A Test
+          </button>
+        </div>
+        
         <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
           String Art Generator - Phase 1 Test
         </h1>

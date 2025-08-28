@@ -1,0 +1,164 @@
+{
+  "title": "Example Gallery",
+  "description": "Explore different styles and see what's possible with string art generation",
+  "categories": [
+    {
+      "id": "portrait",
+      "name": "Portraits",
+      "description": "Human faces and expressions",
+      "icon": "user"
+    },
+    {
+      "id": "landscape",
+      "name": "Landscapes", 
+      "description": "Natural scenes and environments",
+      "icon": "mountain"
+    },
+    {
+      "id": "abstract",
+      "name": "Abstract",
+      "description": "Artistic and geometric patterns",
+      "icon": "palette"
+    },
+    {
+      "id": "architecture",
+      "name": "Architecture",
+      "description": "Buildings and structural designs",
+      "icon": "building"
+    }
+  ],
+  "examples": [
+    {
+      "id": "portrait-fine",
+      "title": "Portrait - Fine Detail",
+      "description": "High pin count for capturing facial features and subtle expressions",
+      "image": "/gallery/portrait-fine.jpg",
+      "thumbnail": "/gallery/thumbs/portrait-fine.jpg",
+      "category": "portrait",
+      "difficulty": "advanced",
+      "settings": {
+        "pins": 288,
+        "lines": 4000,
+        "weight": 15,
+        "imgSize": 500,
+        "minDistance": 20
+      },
+      "stats": {
+        "threadLength": 936,
+        "generationTime": 90,
+        "complexity": "high"
+      },
+      "tags": ["detailed", "realistic", "human", "face"]
+    },
+    {
+      "id": "portrait-bold",
+      "title": "Portrait - Bold Lines",
+      "description": "Fewer pins and lines for a striking, minimalist portrait effect",
+      "image": "/gallery/portrait-bold.jpg",
+      "thumbnail": "/gallery/thumbs/portrait-bold.jpg", 
+      "category": "portrait",
+      "difficulty": "intermediate",
+      "settings": {
+        "pins": 144,
+        "lines": 2000,
+        "weight": 30,
+        "imgSize": 500,
+        "minDistance": 15
+      },
+      "stats": {
+        "threadLength": 520,
+        "generationTime": 45,
+        "complexity": "medium"
+      },
+      "tags": ["bold", "minimalist", "striking", "artistic"]
+    },
+    {
+      "id": "landscape-mountain",
+      "title": "Mountain Landscape",
+      "description": "Natural scenery with excellent contrast between sky and peaks",
+      "image": "/gallery/landscape-mountain.jpg",
+      "thumbnail": "/gallery/thumbs/landscape-mountain.jpg",
+      "category": "landscape", 
+      "difficulty": "intermediate",
+      "settings": {
+        "pins": 216,
+        "lines": 3000,
+        "weight": 20,
+        "imgSize": 500,
+        "minDistance": 18
+      },
+      "stats": {
+        "threadLength": 705,
+        "generationTime": 65,
+        "complexity": "medium"
+      },
+      "tags": ["nature", "mountains", "scenery", "contrast"]
+    },
+    {
+      "id": "abstract-geometric",
+      "title": "Geometric Abstract",
+      "description": "Clean geometric shapes create stunning mathematical patterns",
+      "image": "/gallery/abstract-geometric.jpg",
+      "thumbnail": "/gallery/thumbs/abstract-geometric.jpg",
+      "category": "abstract",
+      "difficulty": "beginner",
+      "settings": {
+        "pins": 120,
+        "lines": 1500,
+        "weight": 25,
+        "imgSize": 500,
+        "minDistance": 12
+      },
+      "stats": {
+        "threadLength": 380,
+        "generationTime": 30,
+        "complexity": "low"
+      },
+      "tags": ["geometric", "patterns", "mathematical", "clean"]
+    },
+    {
+      "id": "architecture-building",
+      "title": "Historic Architecture",
+      "description": "Detailed building features with strong vertical and horizontal lines",
+      "image": "/gallery/architecture-building.jpg", 
+      "thumbnail": "/gallery/thumbs/architecture-building.jpg",
+      "category": "architecture",
+      "difficulty": "advanced",
+      "settings": {
+        "pins": 324,
+        "lines": 3500,
+        "weight": 18,
+        "imgSize": 500,
+        "minDistance": 22
+      },
+      "stats": {
+        "threadLength": 825,
+        "generationTime": 80,
+        "complexity": "high"
+      },
+      "tags": ["building", "detailed", "structural", "historic"]
+    },
+    {
+      "id": "abstract-spiral",
+      "title": "Spiral Pattern",
+      "description": "Flowing curves and organic shapes perfect for beginners",
+      "image": "/gallery/abstract-spiral.jpg",
+      "thumbnail": "/gallery/thumbs/abstract-spiral.jpg", 
+      "category": "abstract",
+      "difficulty": "beginner",
+      "settings": {
+        "pins": 96,
+        "lines": 1200,
+        "weight": 22,
+        "imgSize": 500,
+        "minDistance": 10
+      },
+      "stats": {
+        "threadLength": 295,
+        "generationTime": 25,
+        "complexity": "low"
+      },
+      "tags": ["spiral", "flowing", "organic", "beginner-friendly"]
+    }
+  ]
+}

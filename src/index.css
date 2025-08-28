@@ -77,7 +77,6 @@
   }
 }
 
-@layer base {
   * {
     @apply border-border;
   }
@@ -107,7 +106,6 @@
   ::selection {
     background-color: hsl(var(--primary) / 0.1);
   }
-}
 
 @layer components {
   /* iOS-style glass effect */
