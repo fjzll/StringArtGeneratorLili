@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import { ContentSection } from "@/components/layout"
@@ -22,7 +22,7 @@ interface FAQData {
   title: string
   subtitle: string
   categories: FAQCategory[]
-  contact: {
+  contact?: {
     title: string
     description: string
     items: Array<{
@@ -38,7 +38,7 @@ export function FAQSection() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
-  const [activeCategory, setActiveCategory] = useState<string>("getting-started")
+
 
   useEffect(() => {
     // Lazy load FAQ content
@@ -111,14 +111,7 @@ export function FAQSection() {
     )
   }
 
-  // Filter questions based on search term
-  const filteredCategories = faqData.categories.map(category => ({
-    ...category,
-    questions: category.questions.filter(q =>
-      q.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      q.answer.toLowerCase().includes(searchTerm.toLowerCase())
-    )
-  })).filter(category => category.questions.length > 0)
+
 
   // Get all questions for search results
   const allQuestions = faqData.categories.flatMap(category => 
@@ -132,7 +125,7 @@ export function FAQSection() {
       )
     : []
 
-  const activeCategoryData = faqData.categories.find(cat => cat.id === activeCategory) || faqData.categories[0]
+
 
   return (
     <ContentSection id="faq" className="space-y-12">
@@ -145,7 +138,7 @@ export function FAQSection() {
       </div>
 
       {/* Search */}
-      <Card className="glass-effect">
+      <Card className="border-none shadow-none bg-transparent">
         <CardContent className="p-6">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
@@ -207,87 +200,73 @@ export function FAQSection() {
           )}
         </div>
       ) : (
-        // Category Navigation and Questions
-        <>
-          {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-2 sm:gap-4">
+        // Accordion-Style Categories
+        <div className="space-y-4">
+          <Accordion type="multiple" className="space-y-4">
             {faqData.categories.map((category) => (
-              <Button
-                key={category.id}
-                variant={activeCategory === category.id ? "default" : "outline"}
-                onClick={() => setActiveCategory(category.id)}
-                className="flex items-center gap-2 transition-all duration-200"
-              >
-                <span className="text-lg">{category.icon}</span>
-                <span className="hidden sm:inline">{category.name}</span>
-                <span className="sm:hidden">{category.name.split(' ')[0]}</span>
-              </Button>
+              <AccordionItem key={category.id} value={category.id} className="border rounded-lg">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline">
+                  <div className="flex items-center gap-3">
+                    <span className="text-2xl">{category.icon}</span>
+                    <div className="text-left">
+                      <h3 className="text-lg font-semibold">{category.name}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {category.questions.length} question{category.questions.length !== 1 ? 's' : ''}
+                      </p>
+                    </div>
+                  </div>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4">
+                  <div className="space-y-4">
+                    <Accordion type="single" collapsible className="space-y-3">
+                      {category.questions.map((question) => (
+                        <AccordionItem key={question.id} value={question.id} className="border rounded-lg px-4">
+                          <AccordionTrigger className="text-left hover:no-underline py-3">
+                            <span className="font-medium text-sm">{question.question}</span>
+                          </AccordionTrigger>
+                          <AccordionContent className="pb-3">
+                            <p className="text-muted-foreground text-sm leading-relaxed">{question.answer}</p>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                  </div>
+                </AccordionContent>
+              </AccordionItem>
             ))}
-          </div>
-
-          {/* Active Category Questions */}
-          {activeCategoryData && (
-            <div className="space-y-6">
-              {/* Category Header */}
-              <div className="text-center">
-                <Card className="glass-effect max-w-2xl mx-auto">
-                  <CardContent className="p-6">
-                    <h3 className="text-xl font-semibold mb-2 flex items-center justify-center gap-2">
-                      <span className="text-2xl">{activeCategoryData.icon}</span>
-                      {activeCategoryData.name}
-                    </h3>
-                    <p className="text-muted-foreground">
-                      {activeCategoryData.questions.length} frequently asked questions
-                    </p>
-                  </CardContent>
-                </Card>
-              </div>
-
-              {/* Questions */}
-              <Accordion type="single" collapsible className="space-y-4">
-                {activeCategoryData.questions.map((question) => (
-                  <AccordionItem key={question.id} value={question.id} className="border rounded-lg px-4">
-                    <AccordionTrigger className="text-left hover:no-underline">
-                      <span className="font-medium">{question.question}</span>
-                    </AccordionTrigger>
-                    <AccordionContent className="pb-4">
-                      <p className="text-muted-foreground leading-relaxed">{question.answer}</p>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </div>
-          )}
-        </>
+          </Accordion>
+        </div>
       )}
 
       {/* Contact/Help Section */}
-      <div className="space-y-8">
-        <div className="text-center">
-          <h3 className="text-2xl font-bold mb-2">{faqData.contact.title}</h3>
-          <p className="text-muted-foreground">{faqData.contact.description}</p>
-        </div>
+      {faqData.contact && (
+        <div className="space-y-8">
+          <div className="text-center">
+            <h3 className="text-2xl font-bold mb-2">{faqData.contact.title}</h3>
+            <p className="text-muted-foreground">{faqData.contact.description}</p>
+          </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {faqData.contact.items.map((item, index) => (
-            <Card key={index} className="card-hover">
-              <CardContent className="p-6 text-center space-y-4">
-                <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto">
-                  {index === 0 ? '🎨' : index === 1 ? '📚' : '🔧'}
-                </div>
-                <div>
-                  <h4 className="font-semibold mb-2">{item.title}</h4>
-                  <p className="text-sm text-muted-foreground mb-4">{item.description}</p>
-                </div>
-                <Button variant="outline" className="group">
-                  {item.action}
-                  <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {faqData.contact.items.map((item, index) => (
+              <Card key={index} className="card-hover">
+                <CardContent className="p-6 text-center space-y-4">
+                  <div className="w-12 h-12 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto">
+                    {index === 0 ? '🎨' : index === 1 ? '📚' : '🔧'}
+                  </div>
+                  <div>
+                    <h4 className="font-semibold mb-2">{item.title}</h4>
+                    <p className="text-sm text-muted-foreground mb-4">{item.description}</p>
+                  </div>
+                  <Button variant="outline" className="group">
+                    {item.action}
+                    <ChevronRight className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </ContentSection>
   )
 }

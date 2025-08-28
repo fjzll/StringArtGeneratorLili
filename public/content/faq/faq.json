@@ -120,26 +120,5 @@
         }
       ]
     }
-  ],
-  "contact": {
-    "title": "Still Have Questions?",
-    "description": "We're here to help you create amazing string art!",
-    "items": [
-      {
-        "title": "Tips & Inspiration",
-        "description": "Check out our gallery for examples and inspiration on what works best.",
-        "action": "View Gallery"
-      },
-      {
-        "title": "Step-by-Step Guide", 
-        "description": "Follow our detailed tutorial for the complete string art creation process.",
-        "action": "View Tutorial"
-      },
-      {
-        "title": "Technical Issues",
-        "description": "Having technical problems? Try refreshing the page or using a different browser.",
-        "action": "Refresh Page"
-      }
-    ]
-  }
+  ]
 }
