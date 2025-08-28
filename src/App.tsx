@@ -1,37 +1,187 @@
 import { useState, useRef } from 'react'
 import { generateStringArt } from './lib/algorithms/stringArtEngine'
 import type { StringArtResult, OptimizationProgress } from './types'
+
+// Layout Components
+import { 
+  AppHeader, 
+  HeroSection, 
+  ContentSection,
+  NavigationDots,
+  FloatingActions 
+} from './components/layout'
+
+// UI Components  
+import { Button } from './components/ui/button'
+import { Card, CardHeader, CardTitle, CardContent } from './components/ui/card'
+import { Progress } from './components/ui/progress'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './components/ui/accordion'
+import { useToast } from './components/ui/use-toast'
+import { Toaster } from './components/ui/toaster'
+
+// Test Components (temporary)
 import { FoundationTest } from './components/test/FoundationTest'
 
+interface PresetConfig {
+  id: string
+  name: string
+  description: string
+  icon: string
+  config: {
+    numberOfPins: number
+    numberOfLines: number
+    lineWeight: number
+    imgSize: number
+  }
+}
+
 function App() {
+  // Hooks
+  const { toast } = useToast()
+  
+  // Core State
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
   const [result, setResult] = useState<StringArtResult | null>(null)
   const [progress, setProgress] = useState<OptimizationProgress | null>(null)
   const [error, setError] = useState<string | null>(null)
+  
+  // UI State
+  const [showFoundationTest, setShowFoundationTest] = useState(false)
+  const [showAdvancedSettings, setShowAdvancedSettings] = useState(false)
+  const [selectedPreset, setSelectedPreset] = useState<string>('fine')
+  
+  // Refs
   const fileInputRef = useRef<HTMLInputElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
   
-  // Parameters that user can adjust - set to original backup defaults
+  // Parameters (will be set by presets or advanced settings)
   const [numberOfPins, setNumberOfPins] = useState(288)
   const [numberOfLines, setNumberOfLines] = useState(4000)
   const [lineWeight, setLineWeight] = useState(20)
   const [imgSize, setImgSize] = useState(500)
-  
-  // Test mode for Phase 2A testing
-  const [showFoundationTest, setShowFoundationTest] = useState(false)
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (!file) return
+  // Preset configurations
+  const presets: PresetConfig[] = [
+    {
+      id: 'fine',
+      name: 'Fine Detail',
+      description: 'High precision with fine lines for detailed images',
+      icon: '✨',
+      config: { numberOfPins: 360, numberOfLines: 4000, lineWeight: 15, imgSize: 500 }
+    },
+    {
+      id: 'bold',
+      name: 'Bold Impact',
+      description: 'Strong lines and high contrast for dramatic effect',
+      icon: '🔥',
+      config: { numberOfPins: 216, numberOfLines: 3000, lineWeight: 35, imgSize: 500 }
+    },
+    {
+      id: 'soft',
+      name: 'Soft Portrait',
+      description: 'Gentle lines perfect for portraits and organic shapes',
+      icon: '🌸',
+      config: { numberOfPins: 288, numberOfLines: 2500, lineWeight: 25, imgSize: 500 }
+    },
+    {
+      id: 'pro',
+      name: 'Professional',
+      description: 'Balanced settings optimized for exhibition quality',
+      icon: '👑',
+      config: { numberOfPins: 324, numberOfLines: 3500, lineWeight: 20, imgSize: 500 }
+    }
+  ]
+
+  // Navigation sections for smooth scrolling
+  const sections = [
+    { id: 'generator', label: 'Generator' },
+    { id: 'tutorial', label: 'Tutorial' },
+    { id: 'gallery', label: 'Gallery' },
+    { id: 'faq', label: 'FAQ' }
+  ]
+
+  // Apply preset configuration
+  const applyPreset = (presetId: string) => {
+    const preset = presets.find(p => p.id === presetId)
+    if (preset) {
+      setSelectedPreset(presetId)
+      setNumberOfPins(preset.config.numberOfPins)
+      setNumberOfLines(preset.config.numberOfLines)
+      setLineWeight(preset.config.lineWeight)
+      setImgSize(preset.config.imgSize)
+    }
+  }
+
+  // Navigation handler
+  const handleNavigation = (section: string) => {
+    const element = document.getElementById(section)
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }
+  }
+
+  // Enhanced drag & drop state for mobile
+  const [isDragOver, setIsDragOver] = useState(false)
+
+  const processFile = (file: File) => {
+    // Check file size (warn if > 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "Large Image Detected",
+        description: "Images over 5MB may take longer to process.",
+        variant: "default",
+      })
+    }
 
     const reader = new FileReader()
     reader.onload = (e) => {
       setSelectedImage(e.target?.result as string)
       setResult(null)
       setError(null)
+      
+      toast({
+        title: "Image Uploaded",
+        description: "Ready to generate string art! Choose a preset and click Generate.",
+        variant: "success",
+      })
     }
     reader.readAsDataURL(file)
+  }
+
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+    processFile(file)
+  }
+
+  // Enhanced drag & drop handlers for mobile and desktop
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(false)
+  }
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setIsDragOver(false)
+    
+    const files = Array.from(e.dataTransfer.files)
+    const imageFile = files.find(file => file.type.startsWith('image/'))
+    
+    if (imageFile) {
+      processFile(imageFile)
+    } else {
+      toast({
+        title: "Invalid File Type",
+        description: "Please select an image file (JPG, PNG, WebP).",
+        variant: "destructive",
+      })
+    }
   }
 
   const generateArt = async () => {
@@ -51,27 +201,15 @@ function App() {
               numberOfPins,
               numberOfLines,
               lineWeight,
-              minDistance: Math.max(2, Math.floor(numberOfPins / 36)), // Dynamic based on pins
+              minDistance: Math.max(2, Math.floor(numberOfPins / 36)),
               imgSize,
             },
             (progressUpdate, currentLineSequence, pinCoordinates) => {
-              // Update React state for progress bar
               setProgress(progressUpdate)
               
-              // Progressive drawing: update canvas when we get progress updates  
               if (currentLineSequence && pinCoordinates) {
-                console.log(`[PROGRESS CALLBACK] Line ${progressUpdate.linesDrawn}/${progressUpdate.totalLines}: Drawing ${progressUpdate.linesDrawn} lines`)
-                
-                // Force immediate canvas update using requestAnimationFrame to ensure it's rendered
                 requestAnimationFrame(() => {
                   drawProgressiveLines(currentLineSequence, pinCoordinates, imgSize, progressUpdate.linesDrawn)
-                })
-              } else {
-                console.log(`[PROGRESS CALLBACK] Line ${progressUpdate.linesDrawn}/${progressUpdate.totalLines}: No data to draw`, {
-                  hasSequence: !!currentLineSequence,
-                  hasCoords: !!pinCoordinates,
-                  sequenceLength: currentLineSequence?.length,
-                  coordsLength: pinCoordinates?.length
                 })
               }
             }
@@ -79,105 +217,87 @@ function App() {
 
           setResult(stringArtResult)
           
-          // Final result should already be drawn by the last progress callback
-          console.log('[GENERATION COMPLETE] String art generation finished')
+          toast({
+            title: "String Art Complete!",
+            description: `Generated ${stringArtResult.lineSequence.length} lines in ${(stringArtResult.processingTimeMs / 1000).toFixed(1)}s`,
+            variant: "success",
+          })
         } catch (error) {
           console.error('Generation failed:', error)
-          setError(error instanceof Error ? error.message : 'Unknown error occurred')
+          const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
+          setError(errorMessage)
+          
+          toast({
+            title: "Generation Failed",
+            description: errorMessage,
+            variant: "destructive",
+            action: {
+              altText: "Try again",
+              onClick: () => generateArt(),
+              children: "Retry"
+            }
+          })
         } finally {
           setIsProcessing(false)
         }
       }
       img.src = selectedImage
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to process image')
+      const errorMessage = error instanceof Error ? error.message : 'Failed to process image'
+      setError(errorMessage)
       setIsProcessing(false)
-    }
-  }
-
-  // Initialize canvas with background and pins
-  const initializeCanvas = (pinCoordinates?: any[]) => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext('2d')!
-    canvas.width = 600
-    canvas.height = 600
-
-    // Clear canvas with white background
-    ctx.fillStyle = 'white'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-    const scale = canvas.width / imgSize
-    const center = canvas.width / 2
-
-    // Draw circle boundary (lighter)
-    ctx.strokeStyle = '#eee'
-    ctx.lineWidth = 1
-    ctx.beginPath()
-    ctx.arc(center, center, (canvas.width / 2) - 5, 0, Math.PI * 2)
-    ctx.stroke()
-
-    // Draw pins if provided
-    if (pinCoordinates) {
-      ctx.fillStyle = 'rgba(255, 0, 0, 0.6)'
-      pinCoordinates.forEach(([x, y]) => {
-        if (x !== undefined && y !== undefined) {
-          ctx.beginPath()
-          ctx.arc(x * scale, y * scale, 1.5, 0, Math.PI * 2)
-          ctx.fill()
-        }
+      
+      toast({
+        title: "Processing Error",
+        description: errorMessage,
+        variant: "destructive",
       })
     }
-
-    return { ctx, scale }
   }
 
-  // Progressive line drawing (called every 10 lines during generation)
-  const drawProgressiveLines = (lineSequence: number[], pinCoordinates: any[], currentImgSize: number, upToLineIndex: number) => {
-    console.log(`[DRAW START] Called drawProgressiveLines: upToLineIndex=${upToLineIndex}, sequenceLength=${lineSequence?.length}`)
+  // Touch interaction handlers for canvas
+  const handleCanvasTouch = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    // Prevent default touch behaviors like scrolling
+    e.preventDefault()
     
-    const canvas = canvasRef.current
-    if (!canvas || !lineSequence || !pinCoordinates) {
-      console.log('[DRAW ERROR] Canvas or data missing:', { 
-        canvas: !!canvas, 
-        lineSequence: !!lineSequence, 
-        pinCoordinates: !!pinCoordinates,
-        sequenceLength: lineSequence?.length,
-        coordsLength: pinCoordinates?.length
-      })
-      return
-    }
+    // Basic touch feedback
+    const canvas = e.currentTarget
+    canvas.style.transform = 'scale(0.99)'
+    setTimeout(() => {
+      canvas.style.transform = 'scale(1)'
+    }, 100)
+  }
 
-    console.log(`[DRAW PROGRESS] Drawing ${upToLineIndex} lines from sequence of ${lineSequence.length}`)
+  // Progressive drawing function (same as original)
+  const drawProgressiveLines = (lineSequence: number[], pinCoordinates: any[], currentImgSize: number, upToLineIndex: number) => {
+    const canvas = canvasRef.current
+    if (!canvas || !lineSequence || !pinCoordinates) return
 
     const ctx = canvas.getContext('2d')!
     canvas.width = 600
     canvas.height = 600
     const scale = canvas.width / currentImgSize
 
-    // Clear and redraw from scratch (like original cv.imshow)
+    // Clear and redraw
     ctx.fillStyle = 'white'
     ctx.fillRect(0, 0, canvas.width, canvas.height)
 
     const center = canvas.width / 2
 
-    // Redraw circle boundary
-    ctx.strokeStyle = '#eee'
+    // Circle boundary
+    ctx.strokeStyle = 'hsl(var(--border))'
     ctx.lineWidth = 1
     ctx.beginPath()
     ctx.arc(center, center, (canvas.width / 2) - 5, 0, Math.PI * 2)
     ctx.stroke()
 
-    // Draw all lines up to current progress
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.15)'
+    // Draw lines
+    ctx.strokeStyle = 'hsl(var(--foreground) / 0.15)'
     ctx.lineWidth = 1.0
     ctx.lineCap = 'round'
     ctx.lineJoin = 'round'
-    ctx.globalCompositeOperation = 'source-over'
     
     const linesToDraw = Math.min(upToLineIndex, lineSequence.length - 1)
-    console.log(`[DRAW LINES] Actually drawing ${linesToDraw} lines`)
     
     for (let i = 0; i < linesToDraw; i++) {
       const pin1Index = lineSequence[i]
@@ -193,8 +313,8 @@ function App() {
       }
     }
 
-    // Draw pins on top
-    ctx.fillStyle = 'rgba(255, 0, 0, 0.6)'
+    // Draw pins
+    ctx.fillStyle = 'hsl(var(--primary) / 0.6)'
     pinCoordinates.forEach(([x, y]) => {
       if (x !== undefined && y !== undefined) {
         ctx.beginPath()
@@ -202,229 +322,462 @@ function App() {
         ctx.fill()
       }
     })
-    
-    console.log(`[DRAW COMPLETE] Finished drawing ${linesToDraw} lines on canvas`)
   }
 
-  const drawResult = (result: StringArtResult) => {
-    console.log('Drawing final result:', result.lineSequence.length, 'lines')
-    drawProgressiveLines(result.lineSequence, result.pinCoordinates, result.parameters.imgSize, result.lineSequence.length - 1)
-  }
-
-  // Show Foundation Test if in test mode
+  // Test mode (temporary)
   if (showFoundationTest) {
     return (
       <div className="min-h-screen bg-background">
-        <div className="fixed top-4 right-4 z-10">
-          <button 
-            onClick={() => setShowFoundationTest(false)}
-            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
-          >
-            Back to App
-          </button>
-        </div>
+        <Button 
+          onClick={() => setShowFoundationTest(false)}
+          variant="destructive"
+          className="fixed top-4 right-4 z-50"
+        >
+          Back to App
+        </Button>
         <FoundationTest />
       </div>
     )
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-6xl mx-auto">
-        {/* Test Mode Toggle */}
-        <div className="fixed top-4 right-4 z-10">
-          <button 
-            onClick={() => setShowFoundationTest(true)}
-            className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
-          >
-            Phase 2A Test
-          </button>
-        </div>
-        
-        <h1 className="text-4xl font-bold text-center mb-8 text-gray-800">
-          String Art Generator - Phase 1 Test
-        </h1>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Input Section */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-semibold mb-4">Upload Image</h2>
-            
-            <div className="space-y-4">
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-              />
-              
-              {selectedImage && (
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
-                  <img 
-                    src={selectedImage} 
-                    alt="Selected" 
-                    className="max-w-full h-auto mx-auto max-h-64 object-contain"
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <AppHeader 
+        onNavigate={handleNavigation}
+        onShowHelp={() => handleNavigation('faq')}
+      />
+
+      {/* Navigation Dots */}
+      <NavigationDots sections={sections} />
+
+      {/* Test Mode Toggle (temporary) */}
+      <Button 
+        onClick={() => setShowFoundationTest(true)}
+        variant="outline"
+        size="sm"
+        className="fixed top-4 left-4 z-40"
+      >
+        Phase 2A Test
+      </Button>
+
+      {/* Main Content */}
+      <main>
+        {/* Hero Section */}
+        <HeroSection id="generator">
+          <div className="text-center space-y-4 sm:space-y-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight px-4">
+              String Art Generator
+            </h1>
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
+              Transform your photos into beautiful mathematical string art using advanced algorithms and customizable presets.
+            </p>
+          </div>
+        </HeroSection>
+
+        {/* Generator Section */}
+        <ContentSection className="space-y-6 sm:space-y-8">
+          {/* Image Upload Area */}
+          <Card className="card-hover">
+            <CardHeader>
+              <CardTitle>Upload Your Image</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {/* Drag & Drop Upload Area */}
+                <div 
+                  className={`
+                    border-2 border-dashed rounded-lg p-6 sm:p-8 text-center transition-all cursor-pointer
+                    min-h-[200px] sm:min-h-[240px] flex flex-col items-center justify-center
+                    ${selectedImage 
+                      ? 'border-primary bg-primary/5' 
+                      : isDragOver 
+                        ? 'border-primary bg-primary/10 scale-[1.02]'
+                        : 'border-border hover:border-primary/50 hover:bg-accent/50 active:bg-accent/75'
+                    }
+                  `}
+                  onClick={() => fileInputRef.current?.click()}
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDrop}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      fileInputRef.current?.click()
+                    }
+                  }}
+                >
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
                   />
-                </div>
-              )}
-              
-              {/* Parameter Controls */}
-              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                <h3 className="font-semibold text-gray-700">Generation Parameters</h3>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Number of Pins: {numberOfPins}
-                    </label>
-                    <input
-                      type="range"
-                      min="36"
-                      max="360"
-                      step="36"
-                      value={numberOfPins}
-                      onChange={(e) => setNumberOfPins(Number(e.target.value))}
-                      disabled={isProcessing}
-                      className="w-full"
-                    />
-                    <div className="flex justify-between text-xs text-gray-500 mt-1">
-                      <span>36</span>
-                      <span>360</span>
-                    </div>
-                  </div>
                   
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Number of Lines: {numberOfLines}
-                    </label>
-                    <input
-                      type="range"
-                      min="100"
-                      max="4000"
-                      step="100"
-                      value={numberOfLines}
-                      onChange={(e) => setNumberOfLines(Number(e.target.value))}
-                      disabled={isProcessing}
-                      className="w-full"
-                    />
-                    <div className="flex justify-between text-xs text-gray-500 mt-1">
-                      <span>100</span>
-                      <span>4000</span>
+                  {selectedImage ? (
+                    <div className="space-y-3 sm:space-y-4">
+                      <img 
+                        src={selectedImage} 
+                        alt="Selected" 
+                        className="max-w-full h-auto mx-auto max-h-48 sm:max-h-64 object-contain rounded-lg shadow-sm"
+                      />
+                      <p className="text-sm text-muted-foreground">
+                        Tap to change image
+                      </p>
                     </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Line Weight: {lineWeight}
-                    </label>
-                    <input
-                      type="range"
-                      min="5"
-                      max="50"
-                      step="5"
-                      value={lineWeight}
-                      onChange={(e) => setLineWeight(Number(e.target.value))}
-                      disabled={isProcessing}
-                      className="w-full"
-                    />
-                    <div className="flex justify-between text-xs text-gray-500 mt-1">
-                      <span>5</span>
-                      <span>50</span>
+                  ) : (
+                    <div className="space-y-3 sm:space-y-4">
+                      <div className={`text-5xl sm:text-6xl transition-transform ${isDragOver ? 'scale-110' : ''}`}>
+                        {isDragOver ? '🎯' : '📸'}
+                      </div>
+                      <div className="space-y-2">
+                        <p className="text-base sm:text-lg font-medium">
+                          {isDragOver ? 'Drop your image here!' : 'Drop your image here'}
+                        </p>
+                        <p className="text-sm text-muted-foreground px-4">
+                          {isDragOver 
+                            ? 'Release to upload your image' 
+                            : 'or tap to browse • JPG, PNG, WebP supported'
+                          }
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Image Size: {imgSize}px
-                    </label>
-                    <input
-                      type="range"
-                      min="200"
-                      max="600"
-                      step="50"
-                      value={imgSize}
-                      onChange={(e) => setImgSize(Number(e.target.value))}
-                      disabled={isProcessing}
-                      className="w-full"
-                    />
-                    <div className="flex justify-between text-xs text-gray-500 mt-1">
-                      <span>200</span>
-                      <span>600</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="text-xs text-gray-600 bg-white rounded p-2">
-                  <strong>Tips:</strong> More pins = finer detail, more lines = darker result, higher weight = stronger lines.
-                  Higher values increase processing time.
+                  )}
                 </div>
               </div>
-              
-              <button
+            </CardContent>
+          </Card>
+
+          {/* Preset Selection */}
+          {selectedImage && (
+            <Card className="card-hover">
+              <CardHeader>
+                <CardTitle>Choose Style Preset</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                  {presets.map((preset) => (
+                    <Card 
+                      key={preset.id}
+                      className={`cursor-pointer transition-all button-press ${
+                        selectedPreset === preset.id 
+                          ? 'ring-2 ring-primary bg-primary/5 scale-[0.98]' 
+                          : 'hover:shadow-md active:scale-[0.96]'
+                      }`}
+                      onClick={() => applyPreset(preset.id)}
+                      role="button"
+                      tabIndex={0}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          applyPreset(preset.id)
+                        }
+                      }}
+                    >
+                      <CardContent className="p-4 sm:p-6 text-center min-h-[120px] sm:min-h-[140px] flex flex-col justify-center">
+                        <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">{preset.icon}</div>
+                        <h3 className="font-semibold mb-1 sm:mb-2 text-sm sm:text-base">{preset.name}</h3>
+                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                          {preset.description}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+                
+                {/* Advanced Settings Accordion */}
+                <div className="mt-6 pt-6 border-t border-border">
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="advanced-settings">
+                      <AccordionTrigger className="hover:no-underline">
+                        Advanced Settings
+                      </AccordionTrigger>
+                      <AccordionContent>
+                        <div className="space-y-6 pt-2">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                              <label className="block text-sm font-medium mb-2">
+                                Number of Pins: {numberOfPins}
+                              </label>
+                              <input
+                                type="range"
+                                min="36"
+                                max="360"
+                                step="36"
+                                value={numberOfPins}
+                                onChange={(e) => setNumberOfPins(Number(e.target.value))}
+                                disabled={isProcessing}
+                                className="w-full"
+                              />
+                              <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                                <span>36 (fast)</span>
+                                <span>360 (detailed)</span>
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                More pins create finer detail but increase processing time.
+                              </p>
+                            </div>
+                            
+                            <div>
+                              <label className="block text-sm font-medium mb-2">
+                                Number of Lines: {numberOfLines}
+                              </label>
+                              <input
+                                type="range"
+                                min="100"
+                                max="4000"
+                                step="100"
+                                value={numberOfLines}
+                                onChange={(e) => setNumberOfLines(Number(e.target.value))}
+                                disabled={isProcessing}
+                                className="w-full"
+                              />
+                              <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                                <span>100 (light)</span>
+                                <span>4000 (dense)</span>
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                More lines create darker, richer results.
+                              </p>
+                            </div>
+                            
+                            <div>
+                              <label className="block text-sm font-medium mb-2">
+                                Line Weight: {lineWeight}
+                              </label>
+                              <input
+                                type="range"
+                                min="5"
+                                max="50"
+                                step="5"
+                                value={lineWeight}
+                                onChange={(e) => setLineWeight(Number(e.target.value))}
+                                disabled={isProcessing}
+                                className="w-full"
+                              />
+                              <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                                <span>5 (thin)</span>
+                                <span>50 (thick)</span>
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Controls the visual thickness of string lines.
+                              </p>
+                            </div>
+                            
+                            <div>
+                              <label className="block text-sm font-medium mb-2">
+                                Canvas Size: {imgSize}px
+                              </label>
+                              <input
+                                type="range"
+                                min="200"
+                                max="600"
+                                step="50"
+                                value={imgSize}
+                                onChange={(e) => setImgSize(Number(e.target.value))}
+                                disabled={isProcessing}
+                                className="w-full"
+                              />
+                              <div className="flex justify-between text-xs text-muted-foreground mt-1">
+                                <span>200px (fast)</span>
+                                <span>600px (quality)</span>
+                              </div>
+                              <p className="text-xs text-muted-foreground mt-1">
+                                Higher resolution improves quality but takes longer.
+                              </p>
+                            </div>
+                          </div>
+                          
+                          <div className="bg-muted/50 rounded-lg p-4">
+                            <h4 className="text-sm font-medium mb-2">💡 Tips for Best Results</h4>
+                            <ul className="text-xs text-muted-foreground space-y-1">
+                              <li>• Use high contrast images for better definition</li>
+                              <li>• Portrait photos work best with 288+ pins</li>
+                              <li>• Start with presets, then fine-tune if needed</li>
+                              <li>• Large settings may take 30+ seconds to process</li>
+                            </ul>
+                          </div>
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Generate Button */}
+          {selectedImage && (
+            <div className="text-center px-4">
+              <Button
                 onClick={generateArt}
                 disabled={!selectedImage || isProcessing}
-                className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white font-semibold py-3 px-4 rounded-lg transition-colors"
+                size="lg"
+                className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-6 text-base sm:text-lg font-semibold min-h-[52px] sm:min-h-[60px] active:scale-[0.98] transition-transform"
               >
-                {isProcessing ? 'Generating...' : 'Generate String Art'}
-              </button>
-              
-              {progress && (
-                <div className="bg-gray-100 rounded-lg p-4">
-                  <div className="flex justify-between text-sm text-gray-600 mb-1">
-                    <span>Progress: {progress.percentComplete.toFixed(1)}%</span>
-                    <span>{progress.linesDrawn} / {progress.totalLines} lines</span>
+                {isProcessing ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                    Generating...
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                      style={{ width: `${progress.percentComplete}%` }}
-                    />
-                  </div>
-                  <p className="text-xs text-gray-500 mt-1">
-                    Thread length: {progress.threadLength.toFixed(2)} inches
-                  </p>
-                </div>
-              )}
-              
-              {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <p className="text-red-700 text-sm">{error}</p>
-                </div>
-              )}
+                ) : (
+                  'Generate String Art'
+                )}
+              </Button>
             </div>
-          </div>
+          )}
 
-          {/* Output Section */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <h2 className="text-2xl font-semibold mb-4">String Art Result</h2>
-            
-            <canvas
-              ref={canvasRef}
-              className="border border-gray-300 rounded-lg w-full max-w-md mx-auto"
-              style={{ aspectRatio: '1/1' }}
-            />
-            
-            {result && (
-              <div className="mt-4 space-y-2 text-sm text-gray-600">
-                <p><strong>Processing time:</strong> {(result.processingTimeMs / 1000).toFixed(1)}s</p>
-                <p><strong>Total lines:</strong> {result.lineSequence.length}</p>
-                <p><strong>Thread length:</strong> {result.totalThreadLength.toFixed(2)} inches</p>
-                <p><strong>Pins used:</strong> {result.parameters.numberOfPins}</p>
-              </div>
-            )}
+          {/* Progress Display */}
+          {progress && (
+            <Card className="glass-effect">
+              <CardContent className="p-6">
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="font-semibold">Generating Your String Art</h3>
+                    <span className="text-sm text-muted-foreground">
+                      {progress.percentComplete.toFixed(1)}%
+                    </span>
+                  </div>
+                  
+                  <Progress value={progress.percentComplete} className="w-full" />
+                  
+                  <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
+                    <div>
+                      Lines: {progress.linesDrawn} / {progress.totalLines}
+                    </div>
+                    <div>
+                      Thread: {progress.threadLength.toFixed(2)}″
+                    </div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Error Display */}
+          {error && (
+            <Card className="border-destructive bg-destructive/5">
+              <CardContent className="p-4">
+                <p className="text-destructive text-sm">{error}</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Canvas Results */}
+          {(progress || result) && (
+            <Card className="card-hover">
+              <CardHeader>
+                <CardTitle>String Art Result</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  <canvas
+                    ref={canvasRef}
+                    className="border border-border rounded-lg w-full max-w-md mx-auto block touch-none select-none transition-transform duration-100"
+                    style={{ aspectRatio: '1/1' }}
+                    onTouchStart={handleCanvasTouch}
+                    onTouchEnd={(e) => e.preventDefault()}
+                  />
+                  
+                  {result && (
+                    <div className="bg-muted/50 rounded-lg p-4 space-y-2 text-sm">
+                      <div className="grid grid-cols-2 gap-2">
+                        <div><strong>Processing:</strong> {(result.processingTimeMs / 1000).toFixed(1)}s</div>
+                        <div><strong>Lines:</strong> {result.lineSequence.length}</div>
+                        <div><strong>Thread:</strong> {result.totalThreadLength.toFixed(2)}″</div>
+                        <div><strong>Pins:</strong> {result.parameters.numberOfPins}</div>
+                      </div>
+                      
+                      <div className="flex flex-col sm:flex-row gap-2 pt-4">
+                        <Button 
+                          variant="outline" 
+                          className="flex-1 min-h-[44px] active:scale-[0.98] transition-transform"
+                          onClick={() => toast({
+                            title: "Download Coming Soon",
+                            description: "Download functionality will be available soon!",
+                            variant: "default",
+                          })}
+                        >
+                          <span className="mr-2">📥</span>
+                          Download
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          className="flex-1 min-h-[44px] active:scale-[0.98] transition-transform"
+                          onClick={() => toast({
+                            title: "Share Coming Soon", 
+                            description: "Share functionality will be available soon!",
+                            variant: "default",
+                          })}
+                        >
+                          <span className="mr-2">📤</span>
+                          Share
+                        </Button>
+                        <Button 
+                          variant="outline" 
+                          className="flex-1 min-h-[44px] active:scale-[0.98] transition-transform"
+                          onClick={() => {
+                            setResult(null)
+                            setProgress(null)
+                            setError(null)
+                            toast({
+                              title: "Ready for New Generation",
+                              description: "Upload a new image or adjust settings to try again.",
+                              variant: "success",
+                            })
+                          }}
+                        >
+                          <span className="mr-2">🔄</span>
+                          Try Again
+                        </Button>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </ContentSection>
+
+        {/* Tutorial Section Placeholder */}
+        <ContentSection id="tutorial">
+          <div className="text-center space-y-6">
+            <h2 className="text-3xl font-bold">How It Works</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Coming soon: Step-by-step tutorial on creating string art masterpieces.
+            </p>
           </div>
-        </div>
-        
-        <div className="mt-8 bg-blue-50 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-blue-800 mb-2">Phase 1 Test Interface</h3>
-          <p className="text-blue-700 text-sm">
-            This is a basic test interface to demonstrate the extracted algorithms from Phase 1. 
-            Upload an image and click "Generate String Art" to see the algorithms in action. 
-            The processing uses reduced parameters for faster testing.
-          </p>
-        </div>
-      </div>
+        </ContentSection>
+
+        {/* Gallery Section Placeholder */}
+        <ContentSection id="gallery">
+          <div className="text-center space-y-6">
+            <h2 className="text-3xl font-bold">Gallery</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Coming soon: Showcase of amazing string art creations.
+            </p>
+          </div>
+        </ContentSection>
+
+        {/* FAQ Section Placeholder */}
+        <ContentSection id="faq">
+          <div className="text-center space-y-6">
+            <h2 className="text-3xl font-bold">FAQ</h2>
+            <p className="text-muted-foreground max-w-2xl mx-auto">
+              Coming soon: Answers to frequently asked questions.
+            </p>
+          </div>
+        </ContentSection>
+      </main>
+
+      {/* Floating Actions */}
+      <FloatingActions 
+        onShowHelp={() => handleNavigation('faq')}
+      />
+
+      {/* Toast Notifications */}
+      <Toaster />
     </div>
   )
 }

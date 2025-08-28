@@ -111,6 +111,11 @@ export default {
         "fade-in": "fadeIn 0.3s ease-out",
         "slide-up": "slideUp 0.3s ease-out",
         "scale-in": "scaleIn 0.2s ease-out",
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+        // Toast animations
+        "in": "slideIn 150ms cubic-bezier(0.16, 1, 0.3, 1)",
+        "out": "slideOut 150ms cubic-bezier(0.16, 1, 0.3, 1)",
       },
       keyframes: {
         fadeIn: {
@@ -124,6 +129,27 @@ export default {
         scaleIn: {
           "0%": { transform: "scale(0.95)", opacity: "0" },
           "100%": { transform: "scale(1)", opacity: "1" },
+        },
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+        // Toast keyframes
+        slideIn: {
+          from: {
+            transform: "translateX(calc(100% + var(--viewport-padding)))",
+          },
+          to: { transform: "translateX(0)" },
+        },
+        slideOut: {
+          from: { transform: "translateX(0)" },
+          to: {
+            transform: "translateX(calc(100% + var(--viewport-padding)))",
+          },
         },
       },
     },
