@@ -61,7 +61,7 @@ export function TutorialSection() {
     // Use Intersection Observer to lazy load when section comes into view
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !tutorialData && !loading) {
+        if (entry.isIntersecting && !tutorialData) {
           loadTutorialContent()
         }
       },

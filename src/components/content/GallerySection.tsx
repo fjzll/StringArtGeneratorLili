@@ -72,7 +72,7 @@ export function GallerySection() {
     // Use Intersection Observer to lazy load when section comes into view
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !galleryData && !loading) {
+        if (entry.isIntersecting && !galleryData) {
           loadGalleryContent()
         }
       },
