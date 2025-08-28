@@ -1,4 +1,4 @@
-import { forwardRef, ReactNode } from "react"
+import { forwardRef, type ReactNode } from "react"
 import { cn } from "@/lib/utils"
 
 interface SectionContainerProps {
@@ -6,13 +6,14 @@ interface SectionContainerProps {
   className?: string
   children: ReactNode
   variant?: "default" | "glass" | "bordered"
-  spacing?: "normal" | "large" | "compact"
+  spacing?: "normal" | "large" | "compact" | "minimal"
   centered?: boolean
 }
 
 export const SectionContainer = forwardRef<HTMLDivElement, SectionContainerProps>(
   ({ id, className, children, variant = "default", spacing = "normal", centered = false, ...props }, ref) => {
     const spacingClasses = {
+      minimal: "py-4 md:py-6",
       compact: "py-8 md:py-12",
       normal: "py-12 md:py-16 lg:py-20",
       large: "py-16 md:py-24 lg:py-32"
@@ -56,7 +57,7 @@ export function HeroSection({ children, ...props }: Omit<SectionContainerProps, 
   return (
     <SectionContainer 
       variant="default" 
-      spacing="large" 
+      spacing="minimal" 
       centered
       {...props}
     >
@@ -69,7 +70,7 @@ export function ContentSection({ children, ...props }: Omit<SectionContainerProp
   return (
     <SectionContainer 
       variant="default" 
-      spacing="normal"
+      spacing="minimal"
       {...props}
     >
       {children}

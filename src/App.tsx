@@ -451,7 +451,8 @@ function App() {
           </Card>
 
           {/* Preset Selection */}
-          {selectedImage && (
+          <div className={!selectedImage ? "opacity-50" : ""}>
+            {/* Preset Selection */}
             <Card className="card-hover">
               <CardHeader>
                 <CardTitle>Choose Style Preset</CardTitle>
@@ -605,28 +606,24 @@ function App() {
                 </div>
               </CardContent>
             </Card>
-          )}
+          </div>
 
           {/* Generate Button */}
-          {selectedImage && (
-            <div className="text-center px-4">
-              <Button
-                onClick={generateArt}
-                disabled={!selectedImage || isProcessing}
-                size="lg"
-                className="w-full sm:w-auto px-8 sm:px-12 py-4 sm:py-6 text-base sm:text-lg font-semibold min-h-[52px] sm:min-h-[60px] active:scale-[0.98] transition-transform"
-              >
-                {isProcessing ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-                    Generating...
-                  </div>
-                ) : (
-                  'Generate String Art'
-                )}
-              </Button>
-            </div>
-          )}
+          <Button
+              onClick={generateArt}
+              disabled={!selectedImage || isProcessing}
+              size="lg"
+              className="w-full px-8 py-4 sm:py-6 text-base sm:text-lg font-semibold min-h-[52px] sm:min-h-[60px] active:scale-[0.98] transition-transform"
+            >
+              {isProcessing ? (
+                <div className="flex items-center gap-2">
+                  <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+                  Generating...
+                </div>
+              ) : (
+                'Generate String Art'
+              )}
+            </Button>
 
           {/* Progress Display */}
           {progress && (
