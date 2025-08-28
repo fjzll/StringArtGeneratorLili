@@ -1,0 +1,145 @@
+{
+  "title": "Frequently Asked Questions",
+  "subtitle": "Everything you need to know about creating stunning string art",
+  "categories": [
+    {
+      "id": "getting-started",
+      "name": "Getting Started", 
+      "icon": "🚀",
+      "questions": [
+        {
+          "id": "what-is-string-art",
+          "question": "What is string art?",
+          "answer": "String art is a geometric pattern formed by wrapping colored string between pins arranged in a specific pattern, typically around a circle. Our digital tool simulates this traditional craft, calculating optimal string paths to recreate your photos using mathematical algorithms."
+        },
+        {
+          "id": "best-images",
+          "question": "What types of images work best?",
+          "answer": "High-contrast images with clear subjects work best - portraits, silhouettes, and bold graphics are ideal. Images with good separation between light and dark areas translate beautifully into string art. Avoid images with lots of fine detail or busy backgrounds."
+        },
+        {
+          "id": "supported-formats",
+          "question": "What image formats are supported?",
+          "answer": "We support JPG, PNG, and WebP formats. For best results, use images that are at least 500x500 pixels. Files up to 10MB are supported, though smaller files (under 5MB) will process faster."
+        },
+        {
+          "id": "how-long-processing",
+          "question": "How long does processing take?",
+          "answer": "Processing time varies based on your settings - typically 5-30 seconds. Fine Detail preset with maximum settings may take longer, while Bold Impact with fewer lines processes quickly. You'll see real-time progress during generation."
+        }
+      ]
+    },
+    {
+      "id": "presets-settings",
+      "name": "Presets & Settings",
+      "icon": "⚙️", 
+      "questions": [
+        {
+          "id": "preset-differences",
+          "question": "What's the difference between presets?",
+          "answer": "Fine Detail (360 pins, 4000 lines) captures intricate features. Bold Impact (216 pins, 3000 lines) creates dramatic high-contrast results. Soft Portrait (288 pins, 2500 lines) produces gentle, elegant renderings. Professional (324 pins, 3500 lines) balances detail and impact for exhibition quality."
+        },
+        {
+          "id": "custom-settings",
+          "question": "Can I customize the settings?",
+          "answer": "Yes! Click 'Advanced Settings' to customize pins (36-360), lines (500-5000), line weight (10-50), and canvas size (300-800px). More pins create smoother curves, more lines add richness, higher line weight makes bolder results."
+        },
+        {
+          "id": "pin-count-effect",
+          "question": "How does pin count affect the result?",
+          "answer": "More pins allow for finer detail and smoother curves but increase processing time. 360 pins provide maximum detail, 216 pins create more geometric looks, and 36 pins give highly stylized, minimalist results."
+        },
+        {
+          "id": "line-weight-meaning",
+          "question": "What does line weight control?",
+          "answer": "Line weight controls the visual thickness of the string lines in your result. Higher weights (35-50) create bold, dramatic lines perfect for wall displays. Lower weights (10-25) produce subtle, delicate effects ideal for detailed work."
+        }
+      ]
+    },
+    {
+      "id": "results-usage",
+      "name": "Results & Usage",
+      "icon": "🎨",
+      "questions": [
+        {
+          "id": "save-download",
+          "question": "How do I save my string art?",
+          "answer": "Right-click on your completed string art and select 'Save image as...' to download it as a high-resolution PNG file. The image is generated at full quality and ready for printing or sharing."
+        },
+        {
+          "id": "print-recommendations",
+          "question": "What are the best printing recommendations?",
+          "answer": "For best printing results, use high-quality photo paper or canvas. The generated image is optimized for prints up to 16x16 inches. Black and white printing often produces striking results that closely match traditional string art aesthetics."
+        },
+        {
+          "id": "thread-length-meaning",
+          "question": "What does the thread length statistic mean?",
+          "answer": "The thread length shows how much string you'd need to physically recreate this design - measured in inches. This helps estimate materials if you want to build the physical version. Most designs require 50-300 inches of thread."
+        },
+        {
+          "id": "make-physical",
+          "question": "Can I create the physical version?",
+          "answer": "Absolutely! The algorithm provides the exact sequence of pin connections. You'll need a circular board, pins (small nails work well), and string. Mark pin positions evenly around your circle, then follow the line sequence shown in the result."
+        }
+      ]
+    },
+    {
+      "id": "troubleshooting",
+      "name": "Troubleshooting",
+      "icon": "🔧",
+      "questions": [
+        {
+          "id": "result-too-light",
+          "question": "My result looks too light or faint",
+          "answer": "Try the 'Bold Impact' preset or increase the number of lines in advanced settings. You can also try increasing line weight for more visible strings. Very light images may need the Fine Detail preset for better contrast."
+        },
+        {
+          "id": "result-too-dark", 
+          "question": "My result looks too dark or muddy",
+          "answer": "Reduce the number of lines or try the 'Soft Portrait' preset. Lower line weight can also help create more subtle results. Sometimes a different source image with better contrast works better."
+        },
+        {
+          "id": "processing-slow",
+          "question": "Processing is taking too long",
+          "answer": "Try using fewer pins or lines, or select a smaller canvas size for faster processing. The Bold Impact preset is optimized for speed while still producing great results."
+        },
+        {
+          "id": "not-recognizable",
+          "question": "The result doesn't look like my image",
+          "answer": "Choose a higher contrast source image, or try the Fine Detail preset for more precision. Some images with subtle gradients or low contrast don't translate well to string art's high-contrast medium."
+        },
+        {
+          "id": "upload-failed",
+          "question": "My image won't upload",
+          "answer": "Ensure your image is in JPG, PNG, or WebP format and under 10MB. Very large images may need to be resized. Try refreshing the page if uploads consistently fail."
+        },
+        {
+          "id": "generation-error",
+          "question": "I'm getting an error during generation",
+          "answer": "Try refreshing the page and uploading your image again. If the error persists, try a smaller image file or different image format. Complex images sometimes need simpler settings to process successfully."
+        }
+      ]
+    }
+  ],
+  "contact": {
+    "title": "Still Have Questions?",
+    "description": "We're here to help you create amazing string art!",
+    "items": [
+      {
+        "title": "Tips & Inspiration",
+        "description": "Check out our gallery for examples and inspiration on what works best.",
+        "action": "View Gallery"
+      },
+      {
+        "title": "Step-by-Step Guide", 
+        "description": "Follow our detailed tutorial for the complete string art creation process.",
+        "action": "View Tutorial"
+      },
+      {
+        "title": "Technical Issues",
+        "description": "Having technical problems? Try refreshing the page or using a different browser.",
+        "action": "Refresh Page"
+      }
+    ]
+  }
+}

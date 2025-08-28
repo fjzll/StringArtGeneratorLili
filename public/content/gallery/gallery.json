@@ -1,0 +1,130 @@
+{
+  "title": "String Art Gallery",
+  "subtitle": "Explore examples created with different presets to inspire your own creations",
+  "categories": [
+    {
+      "id": "fine-detail",
+      "name": "Fine Detail",
+      "description": "High precision with fine lines for detailed images",
+      "icon": "✨",
+      "examples": [
+        {
+          "id": "cat-fine-detail",
+          "title": "Cat Portrait - Fine Detail",
+          "originalImage": "/gallery/Cat.jpg",
+          "stringArtImage": "/gallery/cat-fine-detail.png",
+          "description": "A detailed cat portrait using the Fine Detail preset, perfect for capturing intricate facial features and fur textures.",
+          "settings": {
+            "numberOfPins": 360,
+            "numberOfLines": 4000,
+            "lineWeight": 15,
+            "imgSize": 500
+          },
+          "stats": {
+            "processingTime": "12.3s",
+            "threadLength": "2847.2\"",
+            "complexity": "High"
+          }
+        }
+      ]
+    },
+    {
+      "id": "bold-impact", 
+      "name": "Bold Impact",
+      "description": "Strong lines and high contrast for dramatic effect",
+      "icon": "🔥",
+      "examples": [
+        {
+          "id": "cat-bold-impact",
+          "title": "Cat Portrait - Bold Impact",
+          "originalImage": "/gallery/Cat.jpg",
+          "stringArtImage": "/gallery/cat-bold-impact.png",
+          "description": "The same cat portrait with bold, dramatic lines that create strong contrast and visual impact.",
+          "settings": {
+            "numberOfPins": 216,
+            "numberOfLines": 3000,
+            "lineWeight": 35,
+            "imgSize": 500
+          },
+          "stats": {
+            "processingTime": "8.7s",
+            "threadLength": "1923.5\"",
+            "complexity": "Medium"
+          }
+        }
+      ]
+    },
+    {
+      "id": "soft-portrait",
+      "name": "Soft Portrait", 
+      "description": "Gentle lines perfect for portraits and organic shapes",
+      "icon": "🌸",
+      "examples": [
+        {
+          "id": "cat-soft-portrait",
+          "title": "Cat Portrait - Soft Portrait",
+          "originalImage": "/gallery/Cat.jpg",
+          "stringArtImage": "/gallery/cat-soft-portrait.png",
+          "description": "A gentle rendering that captures the soft, elegant nature of the subject with subtle line work.",
+          "settings": {
+            "numberOfPins": 288,
+            "numberOfLines": 2500,
+            "lineWeight": 25,
+            "imgSize": 500
+          },
+          "stats": {
+            "processingTime": "7.2s",
+            "threadLength": "1654.8\"",
+            "complexity": "Medium"
+          }
+        }
+      ]
+    },
+    {
+      "id": "professional",
+      "name": "Professional",
+      "description": "Balanced settings optimized for exhibition quality",
+      "icon": "👑",
+      "examples": [
+        {
+          "id": "cat-professional",
+          "title": "Cat Portrait - Professional",
+          "originalImage": "/gallery/Cat.jpg",
+          "stringArtImage": "/gallery/cat-professional.png",
+          "description": "Exhibition-quality result with balanced detail and visual impact, perfect for professional displays.",
+          "settings": {
+            "numberOfPins": 324,
+            "numberOfLines": 3500,
+            "lineWeight": 20,
+            "imgSize": 500
+          },
+          "stats": {
+            "processingTime": "10.1s",
+            "threadLength": "2234.7\"",
+            "complexity": "High"
+          }
+        }
+      ]
+    }
+  ],
+  "inspiration": {
+    "title": "Tips for Great Results",
+    "items": [
+      {
+        "title": "High Contrast Works Best",
+        "description": "Images with clear differences between light and dark areas produce the most striking string art.",
+        "example": "cat-fine-detail"
+      },
+      {
+        "title": "Experiment with Presets", 
+        "description": "The same image can look completely different with various preset settings - try them all!",
+        "example": "cat-bold-impact"
+      },
+      {
+        "title": "Consider Your Display",
+        "description": "Bold Impact works great for wall displays, while Soft Portrait is perfect for intimate settings.",
+        "example": "cat-soft-portrait"
+      }
+    ]
+  }
+}

@@ -19,6 +19,9 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './
 import { useToast } from './components/ui/use-toast'
 import { Toaster } from './components/ui/toaster'
 
+// Content Components
+import { TutorialSection, GallerySection, FAQSection } from './components/content'
+
 // Test Components (temporary)
 import { FoundationTest } from './components/test/FoundationTest'
 
@@ -737,35 +740,14 @@ function App() {
           )}
         </ContentSection>
 
-        {/* Tutorial Section Placeholder */}
-        <ContentSection id="tutorial">
-          <div className="text-center space-y-6">
-            <h2 className="text-3xl font-bold">How It Works</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Coming soon: Step-by-step tutorial on creating string art masterpieces.
-            </p>
-          </div>
-        </ContentSection>
+        {/* Tutorial Section */}
+        <TutorialSection />
 
-        {/* Gallery Section Placeholder */}
-        <ContentSection id="gallery">
-          <div className="text-center space-y-6">
-            <h2 className="text-3xl font-bold">Gallery</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Coming soon: Showcase of amazing string art creations.
-            </p>
-          </div>
-        </ContentSection>
+        {/* Gallery Section */}
+        <GallerySection />
 
-        {/* FAQ Section Placeholder */}
-        <ContentSection id="faq">
-          <div className="text-center space-y-6">
-            <h2 className="text-3xl font-bold">FAQ</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
-              Coming soon: Answers to frequently asked questions.
-            </p>
-          </div>
-        </ContentSection>
+        {/* FAQ Section */}
+        <FAQSection />
       </main>
 
       {/* Floating Actions */}
