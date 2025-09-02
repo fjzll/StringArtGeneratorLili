@@ -147,6 +147,24 @@ function App() {
     document.body.removeChild(link)
   }
 
+  // Try Again handler - reset everything and go back to generator
+  const handleTryAgain = () => {
+    // Reset all states
+    setSelectedImage(null)
+    setResult(null)
+    setProgress(null)
+    setError(null)
+    setIsProcessing(false)
+    
+    // Reset file input
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+    
+    // Navigate to generator section
+    handleNavigation('generator')
+  }
+
 
   // Enhanced drag & drop state for mobile
   const [isDragOver, setIsDragOver] = useState(false)
@@ -692,11 +710,7 @@ function App() {
                         <Button 
                           variant="outline" 
                           className="flex-1 min-h-[44px] active:scale-[0.98] transition-transform"
-                          onClick={() => {
-                            setResult(null)
-                            setProgress(null)
-                            setError(null)
-                          }}
+                          onClick={handleTryAgain}
                         >
                           <span className="mr-2">🔄</span>
                           Try Again
