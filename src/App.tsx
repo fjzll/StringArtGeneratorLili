@@ -16,8 +16,6 @@ import { Button } from './components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from './components/ui/card'
 import { Progress } from './components/ui/progress'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './components/ui/accordion'
-import { useToast } from './components/ui/use-toast'
-import { Toaster } from './components/ui/toaster'
 
 // Content Components
 import { TutorialSection, GallerySection, FAQSection } from './components/content'
@@ -39,9 +37,6 @@ interface PresetConfig {
 }
 
 function App() {
-  // Hooks
-  const { toast } = useToast()
-  
   // Core State
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [isProcessing, setIsProcessing] = useState(false)
@@ -142,11 +137,7 @@ function App() {
   const processFile = (file: File) => {
     // Check file size (warn if > 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "Large Image Detected",
-        description: "Images over 5MB may take longer to process.",
-        variant: "default",
-      })
+      // Large image detected - no alert needed
     }
 
     const reader = new FileReader()
@@ -154,12 +145,6 @@ function App() {
       setSelectedImage(e.target?.result as string)
       setResult(null)
       setError(null)
-      
-      toast({
-        title: "Image Uploaded",
-        description: "Ready to generate string art! Choose a preset and click Generate.",
-        variant: "success",
-      })
     }
     reader.readAsDataURL(file)
   }
@@ -191,11 +176,7 @@ function App() {
     if (imageFile) {
       processFile(imageFile)
     } else {
-      toast({
-        title: "Invalid File Type",
-        description: "Please select an image file (JPG, PNG, WebP).",
-        variant: "destructive",
-      })
+      // Invalid file type - no alert needed
     }
   }
 
@@ -231,25 +212,10 @@ function App() {
           )
 
           setResult(stringArtResult)
-          
-          toast({
-            title: "String Art Complete!",
-            description: `Generated ${stringArtResult.lineSequence.length} lines in ${(stringArtResult.processingTimeMs / 1000).toFixed(1)}s`,
-            variant: "success",
-          })
         } catch (error) {
           console.error('Generation failed:', error)
           const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred'
           setError(errorMessage)
-          
-          toast({
-            title: "Generation Failed",
-            description: errorMessage,
-            variant: "destructive",
-            action: (
-              <button onClick={() => generateArt()}>Retry</button>
-            )
-          })
         } finally {
           setIsProcessing(false)
         }
@@ -259,12 +225,6 @@ function App() {
       const errorMessage = error instanceof Error ? error.message : 'Failed to process image'
       setError(errorMessage)
       setIsProcessing(false)
-      
-      toast({
-        title: "Processing Error",
-        description: errorMessage,
-        variant: "destructive",
-      })
     }
   }
 
@@ -707,11 +667,9 @@ function App() {
                         <Button 
                           variant="outline" 
                           className="flex-1 min-h-[44px] active:scale-[0.98] transition-transform"
-                          onClick={() => toast({
-                            title: "Download Coming Soon",
-                            description: "Download functionality will be available soon!",
-                            variant: "default",
-                          })}
+                          onClick={() => {
+                            // Download functionality coming soon
+                          }}
                         >
                           <span className="mr-2">📥</span>
                           Download
@@ -719,11 +677,9 @@ function App() {
                         <Button 
                           variant="outline" 
                           className="flex-1 min-h-[44px] active:scale-[0.98] transition-transform"
-                          onClick={() => toast({
-                            title: "Share Coming Soon", 
-                            description: "Share functionality will be available soon!",
-                            variant: "default",
-                          })}
+                          onClick={() => {
+                            // Share functionality coming soon
+                          }}
                         >
                           <span className="mr-2">📤</span>
                           Share
@@ -735,11 +691,6 @@ function App() {
                             setResult(null)
                             setProgress(null)
                             setError(null)
-                            toast({
-                              title: "Ready for New Generation",
-                              description: "Upload a new image or adjust settings to try again.",
-                              variant: "success",
-                            })
                           }}
                         >
                           <span className="mr-2">🔄</span>
@@ -772,8 +723,6 @@ function App() {
         onShowHelp={() => handleNavigation('faq')}
       />
 
-      {/* Toast Notifications */}
-      <Toaster />
     </div>
   )
 }
