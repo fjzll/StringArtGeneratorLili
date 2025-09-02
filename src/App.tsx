@@ -52,6 +52,7 @@ function App() {
   // UI State
   const [showFoundationTest, setShowFoundationTest] = useState(false)
   const [selectedPreset, setSelectedPreset] = useState<string>('fine')
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   
   // Refs
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -121,6 +122,13 @@ function App() {
     if (element) {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' })
     }
+    // Close mobile menu after navigation
+    setIsMobileMenuOpen(false)
+  }
+
+  // Mobile menu toggle handler
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
   // Enhanced drag & drop state for mobile
@@ -346,6 +354,8 @@ function App() {
       <AppHeader 
         onNavigate={handleNavigation}
         onShowHelp={() => handleNavigation('faq')}
+        onToggleMobileMenu={toggleMobileMenu}
+        isMobileMenuOpen={isMobileMenuOpen}
       />
 
       {/* Navigation Dots */}

@@ -4,10 +4,12 @@ import { Menu, Download, HelpCircle } from "lucide-react"
 interface AppHeaderProps {
   onNavigate?: (section: string) => void
   onShowHelp?: () => void
+  onToggleMobileMenu?: () => void
+  isMobileMenuOpen?: boolean
   className?: string
 }
 
-export function AppHeader({ onNavigate, onShowHelp, className }: AppHeaderProps) {
+export function AppHeader({ onNavigate, onShowHelp, onToggleMobileMenu, isMobileMenuOpen, className }: AppHeaderProps) {
   return (
     <header className={`sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${className}`}>
       <div className="container flex h-14 items-center justify-between">
@@ -66,11 +68,44 @@ export function AppHeader({ onNavigate, onShowHelp, className }: AppHeaderProps)
             variant="ghost" 
             size="sm"
             className="md:hidden"
+            onClick={onToggleMobileMenu}
           >
             <Menu className="h-4 w-4" />
           </Button>
         </div>
       </div>
+      
+      {/* Mobile Navigation Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+          <nav className="container py-4 space-y-2">
+            <button 
+              onClick={() => onNavigate?.('generator')}
+              className="block w-full text-left py-3 px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md"
+            >
+              Generator
+            </button>
+            <button 
+              onClick={() => onNavigate?.('tutorial')}
+              className="block w-full text-left py-3 px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md"
+            >
+              Tutorial
+            </button>
+            <button 
+              onClick={() => onNavigate?.('gallery')}
+              className="block w-full text-left py-3 px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md"
+            >
+              Gallery
+            </button>
+            <button 
+              onClick={() => onNavigate?.('faq')}
+              className="block w-full text-left py-3 px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md"
+            >
+              FAQ
+            </button>
+          </nav>
+        </div>
+      )}
     </header>
   )
 }
