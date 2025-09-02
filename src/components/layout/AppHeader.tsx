@@ -53,16 +53,6 @@ export function AppHeader({ onNavigate, onShowHelp, onToggleMobileMenu, isMobile
 
         {/* Actions */}
         <div className="flex items-center space-x-2">
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={onShowHelp}
-            className="hidden sm:inline-flex"
-          >
-            <HelpCircle className="h-4 w-4 mr-2" />
-            Help
-          </Button>
-          
           {/* Mobile menu button */}
           <Button 
             variant="ghost" 

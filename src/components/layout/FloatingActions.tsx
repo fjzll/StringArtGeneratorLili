@@ -142,11 +142,7 @@ export function FloatingActions({
             variant="default"
             size="lg"
             onClick={(e) => {
-              if (secondaryActions.length > 0) {
-                setIsExpanded(!isExpanded)
-              } else {
-                primaryAction.onClick()
-              }
+              primaryAction.onClick()
             }}
             onBlur={() => {
               // Close expanded menu when focus leaves

@@ -131,6 +131,11 @@ function App() {
     setIsMobileMenuOpen(!isMobileMenuOpen)
   }
 
+  // Scroll to top handler
+  const handleScrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   // Enhanced drag & drop state for mobile
   const [isDragOver, setIsDragOver] = useState(false)
 
@@ -763,6 +768,7 @@ function App() {
 
       {/* Floating Actions */}
       <FloatingActions 
+        onScrollToTop={handleScrollToTop}
         onShowHelp={() => handleNavigation('faq')}
       />
 
