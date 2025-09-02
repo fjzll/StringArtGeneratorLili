@@ -147,6 +147,7 @@ function App() {
     document.body.removeChild(link)
   }
 
+
   // Enhanced drag & drop state for mobile
   const [isDragOver, setIsDragOver] = useState(false)
 
@@ -692,16 +693,6 @@ function App() {
                           variant="outline" 
                           className="flex-1 min-h-[44px] active:scale-[0.98] transition-transform"
                           onClick={() => {
-                            // Share functionality coming soon
-                          }}
-                        >
-                          <span className="mr-2">📤</span>
-                          Share
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          className="flex-1 min-h-[44px] active:scale-[0.98] transition-transform"
-                          onClick={() => {
                             setResult(null)
                             setProgress(null)
                             setError(null)
@@ -720,6 +711,7 @@ function App() {
             </div>
           </div>
         </div>
+
 
         {/* Gallery Section */}
         <GallerySection />
