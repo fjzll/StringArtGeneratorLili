@@ -98,8 +98,8 @@ function App() {
   // Navigation sections for smooth scrolling
   const sections = [
     { id: 'generator', label: 'Generator' },
-    { id: 'tutorial', label: 'Tutorial' },
     { id: 'gallery', label: 'Gallery' },
+    { id: 'tutorial', label: 'Tutorial' },
     { id: 'faq', label: 'FAQ' }
   ]
 
@@ -376,7 +376,9 @@ function App() {
         </HeroSection>
 
         {/* Generator Section */}
-        <ContentSection className="space-y-6 sm:space-y-8">
+        <div className="w-full scroll-mt-16 py-4 md:py-6">
+          <div className="container-apple">
+            <div className="space-y-6 sm:space-y-8">
           {/* Image Upload Area */}
           <Card className="card-hover">
             <CardHeader>
@@ -735,13 +737,15 @@ function App() {
               </CardContent>
             </Card>
           )}
-        </ContentSection>
-
-        {/* Tutorial Section */}
-        <TutorialSection />
+            </div>
+          </div>
+        </div>
 
         {/* Gallery Section */}
         <GallerySection />
+
+        {/* Tutorial Section */}
+        <TutorialSection />
 
         {/* FAQ Section */}
         <FAQSection />

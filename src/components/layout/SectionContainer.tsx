@@ -70,7 +70,7 @@ export function ContentSection({ children, ...props }: Omit<SectionContainerProp
   return (
     <SectionContainer 
       variant="default" 
-      spacing="minimal"
+      spacing="normal"
       {...props}
     >
       {children}
