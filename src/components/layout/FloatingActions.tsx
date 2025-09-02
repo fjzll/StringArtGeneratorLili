@@ -99,13 +99,14 @@ export function FloatingActions({
   return (
     <div 
       className={cn(
-        "fixed bottom-6 right-6 z-50 flex flex-col-reverse items-end space-y-reverse space-y-3",
+        "fixed bottom-6 right-4 sm:right-6 z-50 flex flex-col-reverse items-end space-y-reverse space-y-3",
+        "thumb-zone-safe",
         className
       )}
     >
       {/* Secondary actions (show when expanded) */}
       {isExpanded && secondaryActions.length > 0 && (
-        <div className="flex flex-col-reverse space-y-reverse space-y-2 animate-fade-in">
+        <div className="flex flex-col-reverse space-y-reverse space-y-3 animate-fade-in">
           {secondaryActions.map((action) => (
             <Button
               key={action.id}
@@ -113,8 +114,9 @@ export function FloatingActions({
               size="sm"
               onClick={action.onClick}
               className={cn(
-                "h-12 w-12 rounded-full shadow-lg backdrop-blur-sm bg-background/80 border border-border/50",
-                "hover:scale-110 transition-all duration-200 group"
+                "touch-target-lg rounded-full shadow-lg backdrop-blur-sm bg-background/90 border border-border/50",
+                "hover:scale-110 active:scale-95 transition-all duration-200 group touch-feedback",
+                "focus-mobile"
               )}
               aria-label={action.label}
               title={action.label}
@@ -130,8 +132,8 @@ export function FloatingActions({
         <div className="relative">
           {/* Tooltip */}
           {!isExpanded && (
-            <div className="absolute right-14 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-              <div className="bg-foreground text-background px-2 py-1 rounded text-xs whitespace-nowrap">
+            <div className="absolute right-16 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none hidden sm:block">
+              <div className="bg-foreground text-background px-3 py-2 rounded-lg text-xs whitespace-nowrap shadow-lg">
                 {primaryAction.label}
               </div>
               <div className="absolute left-full top-1/2 -translate-y-1/2 border-4 border-transparent border-l-foreground"></div>
@@ -149,9 +151,10 @@ export function FloatingActions({
               setTimeout(() => setIsExpanded(false), 150)
             }}
             className={cn(
-              "h-14 w-14 rounded-full shadow-xl",
+              "touch-target-xl rounded-full shadow-xl",
               "hover:scale-110 active:scale-95 transition-all duration-200 group",
               "bg-primary hover:bg-primary/90 text-primary-foreground",
+              "touch-feedback focus-mobile",
               isExpanded && secondaryActions.length > 0 && "rotate-45"
             )}
             aria-label={primaryAction.label}
@@ -163,13 +166,13 @@ export function FloatingActions({
       )}
 
       {/* Mobile-specific actions */}
-      <div className="md:hidden fixed bottom-20 left-6">
+      <div className="sm:hidden fixed bottom-6 left-4 thumb-zone-safe">
         {onSettings && (
           <Button
             variant="secondary"
             size="sm"
             onClick={onSettings}
-            className="h-12 w-12 rounded-full shadow-lg backdrop-blur-sm bg-background/80 border border-border/50"
+            className="touch-target-lg rounded-full shadow-lg backdrop-blur-sm bg-background/90 border border-border/50 touch-feedback focus-mobile"
             aria-label="Settings"
             title="Settings"
           >
@@ -202,9 +205,9 @@ export function ScrollToTopButton({ className }: { className?: string }) {
       size="lg"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className={cn(
-        "fixed bottom-6 right-6 z-50 h-12 w-12 rounded-full shadow-xl",
+        "fixed bottom-6 right-4 sm:right-6 z-50 touch-target-lg rounded-full shadow-xl",
         "hover:scale-110 active:scale-95 transition-all duration-200",
-        "animate-fade-in",
+        "animate-fade-in touch-feedback focus-mobile thumb-zone-safe",
         className
       )}
       aria-label="Scroll to top"
@@ -228,9 +231,9 @@ export function HelpButton({
       size="sm"
       onClick={onClick}
       className={cn(
-        "fixed bottom-6 left-6 z-50 h-12 w-12 rounded-full shadow-lg",
-        "backdrop-blur-sm bg-background/80 border border-border/50",
-        "hover:scale-110 transition-all duration-200",
+        "fixed bottom-6 left-4 sm:left-6 z-50 touch-target-lg rounded-full shadow-lg",
+        "backdrop-blur-sm bg-background/90 border border-border/50",
+        "hover:scale-110 transition-all duration-200 touch-feedback focus-mobile thumb-zone-safe",
         className
       )}
       aria-label="Help & FAQ"

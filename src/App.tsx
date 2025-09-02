@@ -1,6 +1,8 @@
 import { useState, useRef } from 'react'
 import { generateStringArt } from './lib/algorithms/stringArtEngine'
 import type { StringArtResult, OptimizationProgress } from './types'
+import { useMobileCanvas } from './hooks/useMobileCanvas'
+import { MobileSlider } from './components/ui/mobile-slider'
 
 // Layout Components
 import { 
@@ -50,7 +52,15 @@ function App() {
   
   // Refs
   const fileInputRef = useRef<HTMLInputElement>(null)
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  
+  // Mobile canvas with pinch-to-zoom and pan functionality
+  const [mobileCanvasRef, canvasTransform, canvasHandlers] = useMobileCanvas({
+    minScale: 0.5,
+    maxScale: 4,
+    enablePan: true,
+    enableZoom: true,
+    resetOnDoubleClick: true,
+  })
   
   // Parameters (will be set by presets or advanced settings)
   const [numberOfPins, setNumberOfPins] = useState(288)
@@ -132,7 +142,7 @@ function App() {
 
   // Download handler for generated string art
   const handleDownload = () => {
-    const canvas = canvasRef.current
+    const canvas = mobileCanvasRef.current
     if (!canvas) return
 
     // Create a link element to trigger download
@@ -262,25 +272,29 @@ function App() {
     }
   }
 
-  // Touch interaction handlers for canvas
-  const handleCanvasTouch = (e: React.TouchEvent<HTMLCanvasElement>) => {
-    // Prevent default touch behaviors like scrolling
-    e.preventDefault()
-    
-    // Basic touch feedback
+  // Enhanced mobile canvas interaction with visual feedback
+  const handleCanvasInteraction = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    // The useMobileCanvas hook handles all touch interactions
+    // Just add visual feedback for touch recognition
     const canvas = e.currentTarget
-    canvas.style.transform = 'scale(0.99)'
+    canvas.style.filter = 'brightness(0.95)'
+    
     setTimeout(() => {
-      canvas.style.transform = 'scale(1)'
-    }, 100)
+      canvas.style.filter = 'brightness(1)'
+    }, 150)
   }
 
-  // Progressive drawing function (same as original)
+  // Progressive drawing function with mobile canvas support
   const drawProgressiveLines = (lineSequence: number[], pinCoordinates: any[], currentImgSize: number, upToLineIndex: number) => {
-    const canvas = canvasRef.current
+    const canvas = mobileCanvasRef.current
     if (!canvas || !lineSequence || !pinCoordinates) return
 
     const ctx = canvas.getContext('2d')!
+    
+    // Store the current transform to reset it for drawing
+    const currentTransform = canvasTransform
+    canvas.style.transform = 'none'
+    
     canvas.width = 600
     canvas.height = 600
     const scale = canvas.width / currentImgSize
@@ -328,6 +342,11 @@ function App() {
         ctx.arc(x * scale, y * scale, 1.5, 0, Math.PI * 2)
         ctx.fill()
       }
+    })
+    
+    // Restore the transform after drawing
+    requestAnimationFrame(() => {
+      canvas.style.transform = `translate3d(${currentTransform.translateX}px, ${currentTransform.translateY}px, 0) scale(${currentTransform.scale})`
     })
   }
 
@@ -402,16 +421,17 @@ function App() {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {/* Drag & Drop Upload Area */}
+                {/* Enhanced Mobile Drag & Drop Upload Area */}
                 <div 
                   className={`
-                    border-2 border-dashed rounded-lg p-6 sm:p-8 text-center transition-all cursor-pointer
-                    min-h-[200px] sm:min-h-[240px] flex flex-col items-center justify-center
+                    drag-zone-mobile text-center transition-all cursor-pointer
+                    min-h-[220px] sm:min-h-[240px] flex flex-col items-center justify-center
+                    touch-feedback-gentle focus-mobile
                     ${selectedImage 
                       ? 'border-primary bg-primary/5' 
                       : isDragOver 
-                        ? 'border-primary bg-primary/10 scale-[1.02]'
-                        : 'border-border hover:border-primary/50 hover:bg-accent/50 active:bg-accent/75'
+                        ? 'drag-active'
+                        : 'border-border hover:border-primary/50 hover:bg-accent/50'
                     }
                   `}
                   onClick={() => fileInputRef.current?.click()}
@@ -479,14 +499,14 @@ function App() {
                 </p>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                <div className="mobile-grid-auto">
                   {presets.map((preset) => (
                     <Card 
                       key={preset.id}
-                      className={`cursor-pointer transition-all button-press ${
+                      className={`cursor-pointer transition-all touch-feedback focus-mobile ${
                         selectedPreset === preset.id 
-                          ? 'ring-2 ring-primary bg-primary/5 scale-[0.98]' 
-                          : 'hover:shadow-md active:scale-[0.96]'
+                          ? 'ring-2 ring-primary bg-primary/5' 
+                          : 'hover:shadow-md card-hover'
                       }`}
                       onClick={() => applyPreset(preset.id)}
                       role="button"
@@ -497,7 +517,7 @@ function App() {
                         }
                       }}
                     >
-                      <CardContent className="p-5 sm:p-6 text-center min-h-[140px] sm:min-h-[160px] flex flex-col justify-center">
+                      <CardContent className="mobile-spacing-lg text-center min-h-[160px] sm:min-h-[180px] flex flex-col justify-center touch-target">
                         <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">{preset.icon}</div>
                         <h3 className="text-heading-sm font-semibold mb-2">{preset.name}</h3>
                         <p className="text-body-sm text-subtle leading-relaxed">
@@ -516,98 +536,66 @@ function App() {
                         Advanced Settings
                       </AccordionTrigger>
                       <AccordionContent>
-                        <div className="space-y-8 pt-4">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                            <div>
-                              <label className="block text-body-sm font-medium mb-3 text-emphasis">
-                                Number of Pins: {numberOfPins}
-                              </label>
-                              <input
-                                type="range"
-                                min="36"
-                                max="360"
-                                step="36"
-                                value={numberOfPins}
-                                onChange={(e) => setNumberOfPins(Number(e.target.value))}
-                                disabled={isProcessing}
-                                className="w-full"
-                              />
-                              <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                                <span>36 (fast)</span>
-                                <span>360 (detailed)</span>
-                              </div>
-                              <p className="text-body-sm text-subtle mt-2 leading-relaxed">
-                                More pins create finer detail but increase processing time.
-                              </p>
+                        <div className="space-y-6 pt-4">
+                          <div className="mobile-stack">
+                            <MobileSlider
+                              label="Number of Pins"
+                              min={36}
+                              max={360}
+                              step={36}
+                              value={numberOfPins}
+                              onValueChange={setNumberOfPins}
+                              disabled={isProcessing}
+                              formatValue={(val) => `${val} pins`}
+                              className="w-full"
+                            />
+                            <div className="text-body-sm text-subtle mt-2 leading-relaxed">
+                              More pins create finer detail but increase processing time.
                             </div>
                             
-                            <div>
-                              <label className="block text-sm font-medium mb-2">
-                                Number of Lines: {numberOfLines}
-                              </label>
-                              <input
-                                type="range"
-                                min="100"
-                                max="4000"
-                                step="100"
-                                value={numberOfLines}
-                                onChange={(e) => setNumberOfLines(Number(e.target.value))}
-                                disabled={isProcessing}
-                                className="w-full"
-                              />
-                              <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                                <span>100 (light)</span>
-                                <span>4000 (dense)</span>
-                              </div>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                More lines create darker, richer results.
-                              </p>
+                            <MobileSlider
+                              label="Number of Lines"
+                              min={100}
+                              max={4000}
+                              step={100}
+                              value={numberOfLines}
+                              onValueChange={setNumberOfLines}
+                              disabled={isProcessing}
+                              formatValue={(val) => `${val} lines`}
+                              className="w-full"
+                            />
+                            <div className="text-body-sm text-subtle mt-2 leading-relaxed">
+                              More lines create darker, richer results.
                             </div>
                             
-                            <div>
-                              <label className="block text-sm font-medium mb-2">
-                                Line Weight: {lineWeight}
-                              </label>
-                              <input
-                                type="range"
-                                min="5"
-                                max="50"
-                                step="5"
-                                value={lineWeight}
-                                onChange={(e) => setLineWeight(Number(e.target.value))}
-                                disabled={isProcessing}
-                                className="w-full"
-                              />
-                              <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                                <span>5 (thin)</span>
-                                <span>50 (thick)</span>
-                              </div>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                Controls the visual thickness of string lines.
-                              </p>
+                            <MobileSlider
+                              label="Line Weight"
+                              min={5}
+                              max={50}
+                              step={5}
+                              value={lineWeight}
+                              onValueChange={setLineWeight}
+                              disabled={isProcessing}
+                              formatValue={(val) => `${val}px`}
+                              className="w-full"
+                            />
+                            <div className="text-body-sm text-subtle mt-2 leading-relaxed">
+                              Controls the visual thickness of string lines.
                             </div>
                             
-                            <div>
-                              <label className="block text-sm font-medium mb-2">
-                                Canvas Size: {imgSize}px
-                              </label>
-                              <input
-                                type="range"
-                                min="200"
-                                max="600"
-                                step="50"
-                                value={imgSize}
-                                onChange={(e) => setImgSize(Number(e.target.value))}
-                                disabled={isProcessing}
-                                className="w-full"
-                              />
-                              <div className="flex justify-between text-xs text-muted-foreground mt-1">
-                                <span>200px (fast)</span>
-                                <span>600px (quality)</span>
-                              </div>
-                              <p className="text-xs text-muted-foreground mt-1">
-                                Higher resolution improves quality but takes longer.
-                              </p>
+                            <MobileSlider
+                              label="Canvas Size"
+                              min={200}
+                              max={600}
+                              step={50}
+                              value={imgSize}
+                              onValueChange={setImgSize}
+                              disabled={isProcessing}
+                              formatValue={(val) => `${val}px`}
+                              className="w-full"
+                            />
+                            <div className="text-body-sm text-subtle mt-2 leading-relaxed">
+                              Higher resolution improves quality but takes longer.
                             </div>
                           </div>
                           
@@ -629,12 +617,12 @@ function App() {
             </Card>
           </div>
 
-          {/* Generate Button */}
+          {/* Enhanced Mobile Generate Button */}
           <Button
               onClick={generateArt}
               disabled={!selectedImage || isProcessing}
               size="lg"
-              className="w-full px-8 py-6 sm:py-8 text-heading-sm font-semibold min-h-[60px] sm:min-h-[72px] active:scale-[0.98] transition-all duration-200 shadow-lg hover:shadow-xl"
+              className="w-full touch-target-xl text-heading-sm font-semibold min-h-[72px] sm:min-h-[80px] touch-feedback shadow-lg hover:shadow-xl focus-mobile"
             >
               {isProcessing ? (
                 <div className="flex items-center gap-2">
@@ -701,13 +689,57 @@ function App() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <canvas
-                    ref={canvasRef}
-                    className="border border-border rounded-lg w-full max-w-md mx-auto block touch-none select-none transition-transform duration-100"
-                    style={{ aspectRatio: '1/1' }}
-                    onTouchStart={handleCanvasTouch}
-                    onTouchEnd={(e) => e.preventDefault()}
-                  />
+                  <div className="relative w-full max-w-lg mx-auto">
+                    <canvas
+                      ref={mobileCanvasRef}
+                      className="canvas-zoomable border border-border rounded-lg w-full mx-auto block transition-transform duration-100 touch-optimized"
+                      style={{ aspectRatio: '1/1' }}
+                      onTouchStart={(e) => {
+                        handleCanvasInteraction(e)
+                        canvasHandlers.onTouchStart(e)
+                      }}
+                      onTouchMove={canvasHandlers.onTouchMove}
+                      onTouchEnd={(e) => {
+                        canvasHandlers.onTouchEnd(e)
+                      }}
+                      onWheel={canvasHandlers.onWheel}
+                      onDoubleClick={canvasHandlers.onDoubleClick}
+                    />
+                    
+                    {/* Mobile zoom controls overlay */}
+                    <div className="absolute top-2 right-2 flex flex-col gap-1 sm:hidden">
+                      <button
+                        onClick={() => canvasHandlers.setTransform({ scale: Math.min(4, canvasTransform.scale * 1.2) })}
+                        className="touch-target bg-background/90 backdrop-blur-sm border border-border/50 rounded-lg shadow-lg text-xs font-medium"
+                        disabled={canvasTransform.scale >= 4}
+                        aria-label="Zoom in"
+                      >
+                        +
+                      </button>
+                      <button
+                        onClick={() => canvasHandlers.setTransform({ scale: Math.max(0.5, canvasTransform.scale * 0.8) })}
+                        className="touch-target bg-background/90 backdrop-blur-sm border border-border/50 rounded-lg shadow-lg text-xs font-medium"
+                        disabled={canvasTransform.scale <= 0.5}
+                        aria-label="Zoom out"
+                      >
+                        -
+                      </button>
+                      <button
+                        onClick={canvasHandlers.resetTransform}
+                        className="touch-target bg-background/90 backdrop-blur-sm border border-border/50 rounded-lg shadow-lg text-xs font-medium"
+                        aria-label="Reset zoom"
+                      >
+                        ⌂
+                      </button>
+                    </div>
+                    
+                    {/* Mobile interaction hint */}
+                    {canvasTransform.scale === 1 && canvasTransform.translateX === 0 && canvasTransform.translateY === 0 && (
+                      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-background/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs text-subtle border border-border/50 sm:hidden">
+                        Pinch to zoom • Double tap to reset
+                      </div>
+                    )}
+                  </div>
                   
                   {result && (
                     <div className="bg-muted/50 rounded-lg p-6 space-y-4">
@@ -734,7 +766,7 @@ function App() {
                       <div className="flex flex-col sm:flex-row gap-3 pt-6">
                         <Button 
                           variant="outline" 
-                          className="flex-1 min-h-[52px] text-body-sm font-medium active:scale-[0.98] transition-all duration-200"
+                          className="flex-1 touch-target-lg text-body-sm font-medium touch-feedback focus-mobile"
                           onClick={handleDownload}
                         >
                           <span className="mr-2">📥</span>
@@ -742,7 +774,7 @@ function App() {
                         </Button>
                         <Button 
                           variant="outline" 
-                          className="flex-1 min-h-[52px] text-body-sm font-medium active:scale-[0.98] transition-all duration-200"
+                          className="flex-1 touch-target-lg text-body-sm font-medium touch-feedback focus-mobile"
                           onClick={handleTryAgain}
                         >
                           <span className="mr-2">🔄</span>
