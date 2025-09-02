@@ -34,20 +34,7 @@ export type {
   StringArtResult,
 } from './stringArt';
 
-// Worker types
-export type {
-  WorkerMessageType,
-  BaseWorkerMessage,
-  InitWorkerMessage,
-  StartProcessingMessage,
-  ProgressUpdateMessage,
-  ProcessingCompleteMessage,
-  ErrorMessage,
-  CancelMessage,
-  WorkerMessage,
-  WorkerStatus,
-  WorkerState,
-} from './worker';
+
 
 // Content types
 export type {
