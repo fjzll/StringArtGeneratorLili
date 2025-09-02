@@ -22,8 +22,7 @@ import { CanvasErrorBoundary } from './components/ui/canvas-error-boundary'
 // Content Components
 import { TutorialSection, GallerySection, FAQSection } from './components/content'
 
-// Test Components (temporary)
-import { FoundationTest } from './components/test/FoundationTest'
+
 
 interface PresetConfig {
   id: string
@@ -47,7 +46,6 @@ function App() {
   const [error, setError] = useState<string | null>(null)
   
   // UI State
-  const [showFoundationTest, setShowFoundationTest] = useState(false)
   const [selectedPreset, setSelectedPreset] = useState<string>('fine')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   
@@ -433,21 +431,7 @@ function App() {
     })
   }
 
-  // Test mode (temporary)
-  if (showFoundationTest) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Button 
-          onClick={() => setShowFoundationTest(false)}
-          variant="destructive"
-          className="fixed top-4 right-4 z-50"
-        >
-          Back to App
-        </Button>
-        <FoundationTest />
-      </div>
-    )
-  }
+
 
   return (
     <div className="min-h-screen bg-background">
@@ -461,15 +445,7 @@ function App() {
       {/* Navigation Dots */}
       <NavigationDots sections={sections} />
 
-      {/* Test Mode Toggle (temporary) */}
-      <Button 
-        onClick={() => setShowFoundationTest(true)}
-        variant="outline"
-        size="sm"
-        className="fixed top-4 left-4 z-40"
-      >
-        Phase 2A Test
-      </Button>
+
 
       {/* Main Content */}
       <main>
