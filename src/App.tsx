@@ -131,6 +131,22 @@ function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
+  // Download handler for generated string art
+  const handleDownload = () => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    // Create a link element to trigger download
+    const link = document.createElement('a')
+    link.download = `string-art-${Date.now()}.png`
+    link.href = canvas.toDataURL('image/png')
+    
+    // Trigger download
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   // Enhanced drag & drop state for mobile
   const [isDragOver, setIsDragOver] = useState(false)
 
@@ -667,9 +683,7 @@ function App() {
                         <Button 
                           variant="outline" 
                           className="flex-1 min-h-[44px] active:scale-[0.98] transition-transform"
-                          onClick={() => {
-                            // Download functionality coming soon
-                          }}
+                          onClick={handleDownload}
                         >
                           <span className="mr-2">📥</span>
                           Download
