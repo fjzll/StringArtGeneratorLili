@@ -113,7 +113,10 @@ export function useMobileCanvas(options: UseMobileCanvasOptions = {}): [
 
   // Touch start handler
   const onTouchStart = useCallback((event: React.TouchEvent<HTMLCanvasElement>) => {
-    event.preventDefault()
+    // Only preventDefault if the event is cancelable (not passive)
+    if (event.cancelable) {
+      event.preventDefault()
+    }
     
     const touches = Array.from(event.touches)
     lastTouchesRef.current = touches
@@ -141,7 +144,10 @@ export function useMobileCanvas(options: UseMobileCanvasOptions = {}): [
 
   // Touch move handler
   const onTouchMove = useCallback((event: React.TouchEvent<HTMLCanvasElement>) => {
-    event.preventDefault()
+    // Only preventDefault if the event is cancelable (not passive)
+    if (event.cancelable) {
+      event.preventDefault()
+    }
     
     const touches = Array.from(event.touches)
     const lastTouches = lastTouchesRef.current
@@ -204,7 +210,10 @@ export function useMobileCanvas(options: UseMobileCanvasOptions = {}): [
 
   // Touch end handler
   const onTouchEnd = useCallback((event: React.TouchEvent<HTMLCanvasElement>) => {
-    event.preventDefault()
+    // Only preventDefault if the event is cancelable (not passive)
+    if (event.cancelable) {
+      event.preventDefault()
+    }
     
     const touches = Array.from(event.touches)
     lastTouchesRef.current = touches
@@ -238,7 +247,10 @@ export function useMobileCanvas(options: UseMobileCanvasOptions = {}): [
   const onWheel = useCallback((event: React.WheelEvent<HTMLCanvasElement>) => {
     if (!enableZoom) return
     
-    event.preventDefault()
+    // Only preventDefault if the event is cancelable (not passive)
+    if (event.cancelable) {
+      event.preventDefault()
+    }
     
     const delta = event.deltaY > 0 ? 0.9 : 1.1
     const newScale = transform.scale * delta
@@ -299,6 +311,36 @@ export function useMobileCanvas(options: UseMobileCanvasOptions = {}): [
     canvas.style.transformOrigin = 'center center'
     canvas.style.transition = isPanningRef.current || isZoomingRef.current ? 'none' : 'transform 0.1s ease-out'
   }, [transform])
+
+  // Add native event listeners for better touch handling
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    // Native event handlers that can properly preventDefault
+    const handleTouchStartNative = (e: TouchEvent) => {
+      e.preventDefault() // This works on native events
+    }
+
+    const handleTouchMoveNative = (e: TouchEvent) => {
+      e.preventDefault() // This works on native events
+    }
+
+    const handleTouchEndNative = (e: TouchEvent) => {
+      e.preventDefault() // This works on native events
+    }
+
+    // Add passive: false to ensure preventDefault works
+    canvas.addEventListener('touchstart', handleTouchStartNative, { passive: false })
+    canvas.addEventListener('touchmove', handleTouchMoveNative, { passive: false })
+    canvas.addEventListener('touchend', handleTouchEndNative, { passive: false })
+
+    return () => {
+      canvas.removeEventListener('touchstart', handleTouchStartNative)
+      canvas.removeEventListener('touchmove', handleTouchMoveNative)
+      canvas.removeEventListener('touchend', handleTouchEndNative)
+    }
+  }, [])
 
   // Comprehensive cleanup to prevent memory leaks
   useEffect(() => {

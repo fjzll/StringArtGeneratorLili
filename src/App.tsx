@@ -690,34 +690,7 @@ function App() {
               )}
             </Button>
 
-          {/* Progress Display */}
-          {progress && (
-            <Card className="glass-effect border-2">
-              <CardContent className="p-8">
-                <div className="space-y-6">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-heading-md font-semibold">Generating Your String Art</h3>
-                    <span className="text-heading-sm font-medium text-brand">
-                      {progress.percentComplete.toFixed(1)}%
-                    </span>
-                  </div>
-                  
-                  <Progress value={progress.percentComplete} className="w-full" />
-                  
-                  <div className="grid grid-cols-2 gap-6 text-body-sm text-subtle">
-                    <div className="space-y-1">
-                      <div className="text-caption text-emphasis">LINES DRAWN</div>
-                      <div className="font-medium">{progress.linesDrawn} / {progress.totalLines}</div>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-caption text-emphasis">THREAD LENGTH</div>
-                      <div className="font-medium">{progress.threadLength.toFixed(2)}″</div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+
 
           {/* Error Display */}
           {error && (
@@ -750,7 +723,7 @@ function App() {
                       <canvas
                         ref={mobileCanvasRef}
                         className="canvas-zoomable border border-border rounded-lg w-full mx-auto block transition-transform duration-100 touch-optimized"
-                        style={{ aspectRatio: '1/1' }}
+                        style={{ aspectRatio: '1/1', touchAction: 'none' }}
                         onTouchStart={(e) => {
                           handleCanvasInteraction(e)
                           canvasHandlers.onTouchStart(e)
@@ -798,6 +771,35 @@ function App() {
                       </div>
                     )}
                   </div>
+                  
+                  {/* Progress Display - Moved between canvas and details */}
+                  {progress && (
+                    <Card className="glass-effect border-2">
+                      <CardContent className="p-8">
+                        <div className="space-y-6">
+                          <div className="flex justify-between items-center">
+                            <h3 className="text-heading-md font-semibold">Generating Your String Art</h3>
+                            <span className="text-heading-sm font-medium text-brand">
+                              {progress.percentComplete.toFixed(1)}%
+                            </span>
+                          </div>
+                          
+                          <Progress value={progress.percentComplete} className="w-full" />
+                          
+                          <div className="grid grid-cols-2 gap-6 text-body-sm text-subtle">
+                            <div className="space-y-1">
+                              <div className="text-caption text-emphasis">LINES DRAWN</div>
+                              <div className="font-medium">{progress.linesDrawn} / {progress.totalLines}</div>
+                            </div>
+                            <div className="space-y-1">
+                              <div className="text-caption text-emphasis">THREAD LENGTH</div>
+                              <div className="font-medium">{progress.threadLength.toFixed(2)}″</div>
+                            </div>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )}
                   
                   {result && (
                     <div className="bg-muted/50 rounded-lg p-6 space-y-4">
