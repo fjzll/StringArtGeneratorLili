@@ -55,6 +55,7 @@ function App() {
   const fileInputRef = useRef<HTMLInputElement>(null)
   const animationFrameRef = useRef<number | undefined>(undefined)
   const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
+  const scrollTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
   
   // Mobile canvas with pinch-to-zoom and pan functionality
   const [mobileCanvasRef, canvasTransform, canvasHandlers] = useMobileCanvas({
@@ -170,6 +171,10 @@ function App() {
       clearTimeout(timeoutRef.current)
       timeoutRef.current = undefined
     }
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current)
+      scrollTimeoutRef.current = undefined
+    }
     
     // Reset all states
     setSelectedImage(null)
@@ -198,6 +203,11 @@ function App() {
       // Clear any pending timeouts
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
+      }
+      
+      // Clear scroll timeout
+      if (scrollTimeoutRef.current) {
+        clearTimeout(scrollTimeoutRef.current)
       }
     }
   }, [])
@@ -268,6 +278,23 @@ function App() {
     setIsProcessing(true)
     setError(null)
     setProgress(null)
+
+    // Auto-scroll to the result section so user can see the generation progress
+    // Clear any existing scroll timeout
+    if (scrollTimeoutRef.current) {
+      clearTimeout(scrollTimeoutRef.current)
+    }
+    
+    scrollTimeoutRef.current = setTimeout(() => {
+      const resultSection = document.getElementById('string-art-result')
+      if (resultSection) {
+        resultSection.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        })
+      }
+      scrollTimeoutRef.current = undefined
+    }, 100) // Small delay to ensure the canvas is rendered
 
     try {
       const img = new Image()
@@ -709,7 +736,7 @@ function App() {
 
           {/* Canvas Results */}
           {(progress || result) && (
-            <Card className="card-hover border-2">
+            <Card id="string-art-result" className="card-hover border-2 scroll-mt-20">
               <CardHeader className="pb-6">
                 <CardTitle className="text-heading-lg font-semibold">String Art Result</CardTitle>
                 <p className="text-body-sm text-subtle mt-2">
