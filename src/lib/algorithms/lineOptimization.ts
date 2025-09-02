@@ -5,7 +5,7 @@
 
 import type { PinCoordinate, LineCache, StringArtParameters, OptimizationProgress } from '../../types';
 import { linspace } from '../math/interpolation';
-import { getSum } from '../math/arrays';
+// Removed unused import: getSum
 import { calculatePinDistance } from '../math/geometry';
 import { getValidTargetPins } from './pinCalculation';
 import { DEFAULT_CONFIG } from '../utils/constants';
@@ -168,7 +168,7 @@ export async function optimizeStringArt(
 
   for (let lineIndex = 0; lineIndex < params.numberOfLines; lineIndex++) {
     // Find best next pin
-    const { bestPin, error } = findBestNextPin(
+    const { bestPin } = findBestNextPin(
       currentPin,
       errorMatrix,
       lineCache,

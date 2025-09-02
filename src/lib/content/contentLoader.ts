@@ -24,7 +24,7 @@ export class AssetResolver {
   }
 
   // Optimize image path based on screen size and connection
-  static getOptimizedImagePath(path: string, options?: {
+  static getOptimizedImagePath(path: string, _options?: {
     width?: number
     quality?: number
     format?: 'webp' | 'jpg' | 'png'

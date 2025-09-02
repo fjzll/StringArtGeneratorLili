@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+// Removed unused Card imports
 import { ContentSection } from "@/components/layout"
 import { TutorialStep } from "./TutorialStep"
 

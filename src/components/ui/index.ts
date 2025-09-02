@@ -1,5 +1,6 @@
 export * from "./accordion"
 export * from "./button"
+export * from "./canvas-error-boundary"
 export * from "./card"
 export * from "./progress"
 export * from "./slider"

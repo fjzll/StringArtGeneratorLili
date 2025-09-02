@@ -26,7 +26,7 @@ export interface MobileCanvasHandlers {
 }
 
 export function useMobileCanvas(options: UseMobileCanvasOptions = {}): [
-  React.RefObject<HTMLCanvasElement>,
+  React.RefObject<HTMLCanvasElement | null>,
   CanvasTransform,
   MobileCanvasHandlers
 ] {
@@ -35,7 +35,6 @@ export function useMobileCanvas(options: UseMobileCanvasOptions = {}): [
     maxScale = 4,
     enablePan = true,
     enableZoom = true,
-    smoothness = 0.1,
     resetOnDoubleClick = true,
   } = options
 
@@ -47,21 +46,22 @@ export function useMobileCanvas(options: UseMobileCanvasOptions = {}): [
   })
 
   // Touch tracking state
-  const lastTouchesRef = useRef<Touch[]>([])
+  const lastTouchesRef = useRef<React.Touch[]>([])
   const lastDistanceRef = useRef<number>(0)
   const isPanningRef = useRef<boolean>(false)
   const isZoomingRef = useRef<boolean>(false)
-  const animationFrameRef = useRef<number>()
+  const animationFrameRef = useRef<number | undefined>(undefined)
+  const visualFeedbackTimeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
 
   // Get distance between two touches
-  const getTouchDistance = useCallback((touch1: Touch, touch2: Touch): number => {
+  const getTouchDistance = useCallback((touch1: React.Touch, touch2: React.Touch): number => {
     const dx = touch1.clientX - touch2.clientX
     const dy = touch1.clientY - touch2.clientY
     return Math.sqrt(dx * dx + dy * dy)
   }, [])
 
   // Get center point between two touches
-  const getTouchCenter = useCallback((touch1: Touch, touch2: Touch): { x: number; y: number } => {
+  const getTouchCenter = useCallback((touch1: React.Touch, touch2: React.Touch): { x: number; y: number } => {
     return {
       x: (touch1.clientX + touch2.clientX) / 2,
       y: (touch1.clientY + touch2.clientY) / 2,
@@ -129,9 +129,14 @@ export function useMobileCanvas(options: UseMobileCanvasOptions = {}): [
       lastDistanceRef.current = getTouchDistance(touches[0], touches[1])
     }
 
-    // Add visual feedback
+    // Add visual feedback with proper cleanup
     const canvas = event.currentTarget
     canvas.style.filter = 'brightness(0.95)'
+    
+    // Clear any existing visual feedback timeout
+    if (visualFeedbackTimeoutRef.current) {
+      clearTimeout(visualFeedbackTimeoutRef.current)
+    }
   }, [enableZoom, getTouchDistance])
 
   // Touch move handler
@@ -205,10 +210,11 @@ export function useMobileCanvas(options: UseMobileCanvasOptions = {}): [
     lastTouchesRef.current = touches
 
     if (touches.length === 0) {
-      // All touches ended
+      // All touches ended - clear touch references to prevent leaks
       isPanningRef.current = false
       isZoomingRef.current = false
       lastDistanceRef.current = 0
+      lastTouchesRef.current = [] // Clear touch references
     } else if (touches.length === 1) {
       // Switch from zoom to pan
       isPanningRef.current = true
@@ -216,10 +222,16 @@ export function useMobileCanvas(options: UseMobileCanvasOptions = {}): [
       lastDistanceRef.current = 0
     }
 
-    // Remove visual feedback
+    // Remove visual feedback with timeout cleanup
     const canvas = event.currentTarget
     canvas.style.filter = 'brightness(1)'
     canvas.style.transform = 'scale(1)'
+    
+    // Clear any pending visual feedback timeouts
+    if (visualFeedbackTimeoutRef.current) {
+      clearTimeout(visualFeedbackTimeoutRef.current)
+      visualFeedbackTimeoutRef.current = undefined
+    }
   }, [])
 
   // Mouse wheel handler for desktop
@@ -288,12 +300,24 @@ export function useMobileCanvas(options: UseMobileCanvasOptions = {}): [
     canvas.style.transition = isPanningRef.current || isZoomingRef.current ? 'none' : 'transform 0.1s ease-out'
   }, [transform])
 
-  // Cleanup
+  // Comprehensive cleanup to prevent memory leaks
   useEffect(() => {
     return () => {
+      // Cancel any pending animation frames
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current)
       }
+      
+      // Clear any pending visual feedback timeouts
+      if (visualFeedbackTimeoutRef.current) {
+        clearTimeout(visualFeedbackTimeoutRef.current)
+      }
+      
+      // Clear touch references to prevent memory leaks
+      lastTouchesRef.current = []
+      lastDistanceRef.current = 0
+      isPanningRef.current = false
+      isZoomingRef.current = false
     }
   }, [])
 

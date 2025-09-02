@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { generateStringArt } from './lib/algorithms/stringArtEngine'
 import type { StringArtResult, OptimizationProgress } from './types'
 import { useMobileCanvas } from './hooks/useMobileCanvas'
@@ -17,6 +17,7 @@ import { Button } from './components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from './components/ui/card'
 import { Progress } from './components/ui/progress'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './components/ui/accordion'
+import { CanvasErrorBoundary } from './components/ui/canvas-error-boundary'
 
 // Content Components
 import { TutorialSection, GallerySection, FAQSection } from './components/content'
@@ -52,6 +53,8 @@ function App() {
   
   // Refs
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const animationFrameRef = useRef<number | undefined>(undefined)
+  const timeoutRef = useRef<NodeJS.Timeout | undefined>(undefined)
   
   // Mobile canvas with pinch-to-zoom and pan functionality
   const [mobileCanvasRef, canvasTransform, canvasHandlers] = useMobileCanvas({
@@ -158,6 +161,16 @@ function App() {
 
   // Try Again handler - reset everything and go back to generator
   const handleTryAgain = () => {
+    // Cancel any pending operations first
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current)
+      animationFrameRef.current = undefined
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+      timeoutRef.current = undefined
+    }
+    
     // Reset all states
     setSelectedImage(null)
     setResult(null)
@@ -173,6 +186,21 @@ function App() {
     // Navigate to generator section
     handleNavigation('generator')
   }
+
+  // Cleanup effect to prevent memory leaks
+  useEffect(() => {
+    return () => {
+      // Cancel any pending animation frames
+      if (animationFrameRef.current) {
+        cancelAnimationFrame(animationFrameRef.current)
+      }
+      
+      // Clear any pending timeouts
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current)
+      }
+    }
+  }, [])
 
 
   // Enhanced drag & drop state for mobile
@@ -227,6 +255,16 @@ function App() {
   const generateArt = async () => {
     if (!selectedImage) return
 
+    // Cancel any pending operations before starting new generation
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current)
+      animationFrameRef.current = undefined
+    }
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+      timeoutRef.current = undefined
+    }
+
     setIsProcessing(true)
     setError(null)
     setProgress(null)
@@ -248,8 +286,14 @@ function App() {
               setProgress(progressUpdate)
               
               if (currentLineSequence && pinCoordinates) {
-                requestAnimationFrame(() => {
+                // Cancel any existing animation frame before scheduling new one
+                if (animationFrameRef.current) {
+                  cancelAnimationFrame(animationFrameRef.current)
+                }
+                
+                animationFrameRef.current = requestAnimationFrame(() => {
                   drawProgressiveLines(currentLineSequence, pinCoordinates, imgSize, progressUpdate.linesDrawn)
+                  animationFrameRef.current = undefined
                 })
               }
             }
@@ -279,13 +323,19 @@ function App() {
     const canvas = e.currentTarget
     canvas.style.filter = 'brightness(0.95)'
     
-    setTimeout(() => {
+    // Clear any existing timeout to prevent leaks
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current)
+    }
+    
+    timeoutRef.current = setTimeout(() => {
       canvas.style.filter = 'brightness(1)'
+      timeoutRef.current = undefined
     }, 150)
   }
 
   // Progressive drawing function with mobile canvas support
-  const drawProgressiveLines = (lineSequence: number[], pinCoordinates: any[], currentImgSize: number, upToLineIndex: number) => {
+  const drawProgressiveLines = (lineSequence: number[], pinCoordinates: [number, number][], currentImgSize: number, upToLineIndex: number) => {
     const canvas = mobileCanvasRef.current
     if (!canvas || !lineSequence || !pinCoordinates) return
 
@@ -345,8 +395,14 @@ function App() {
     })
     
     // Restore the transform after drawing
-    requestAnimationFrame(() => {
+    // Clear any existing animation frame to prevent leaks
+    if (animationFrameRef.current) {
+      cancelAnimationFrame(animationFrameRef.current)
+    }
+    
+    animationFrameRef.current = requestAnimationFrame(() => {
       canvas.style.transform = `translate3d(${currentTransform.translateX}px, ${currentTransform.translateY}px, 0) scale(${currentTransform.scale})`
+      animationFrameRef.current = undefined
     })
   }
 
@@ -690,21 +746,23 @@ function App() {
               <CardContent>
                 <div className="space-y-4">
                   <div className="relative w-full max-w-lg mx-auto">
-                    <canvas
-                      ref={mobileCanvasRef}
-                      className="canvas-zoomable border border-border rounded-lg w-full mx-auto block transition-transform duration-100 touch-optimized"
-                      style={{ aspectRatio: '1/1' }}
-                      onTouchStart={(e) => {
-                        handleCanvasInteraction(e)
-                        canvasHandlers.onTouchStart(e)
-                      }}
-                      onTouchMove={canvasHandlers.onTouchMove}
-                      onTouchEnd={(e) => {
-                        canvasHandlers.onTouchEnd(e)
-                      }}
-                      onWheel={canvasHandlers.onWheel}
-                      onDoubleClick={canvasHandlers.onDoubleClick}
-                    />
+                    <CanvasErrorBoundary onReset={handleTryAgain}>
+                      <canvas
+                        ref={mobileCanvasRef}
+                        className="canvas-zoomable border border-border rounded-lg w-full mx-auto block transition-transform duration-100 touch-optimized"
+                        style={{ aspectRatio: '1/1' }}
+                        onTouchStart={(e) => {
+                          handleCanvasInteraction(e)
+                          canvasHandlers.onTouchStart(e)
+                        }}
+                        onTouchMove={canvasHandlers.onTouchMove}
+                        onTouchEnd={(e) => {
+                          canvasHandlers.onTouchEnd(e)
+                        }}
+                        onWheel={canvasHandlers.onWheel}
+                        onDoubleClick={canvasHandlers.onDoubleClick}
+                      />
+                    </CanvasErrorBoundary>
                     
                     {/* Mobile zoom controls overlay */}
                     <div className="absolute top-2 right-2 flex flex-col gap-1 sm:hidden">
