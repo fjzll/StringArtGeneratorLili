@@ -1,50 +1,50 @@
 import { Button } from "@/components/ui/button"
-import { Menu, Download, HelpCircle } from "lucide-react"
+import { Menu } from "lucide-react"
 
 interface AppHeaderProps {
   onNavigate?: (section: string) => void
-  onShowHelp?: () => void
   onToggleMobileMenu?: () => void
   isMobileMenuOpen?: boolean
   className?: string
 }
 
-export function AppHeader({ onNavigate, onShowHelp, onToggleMobileMenu, isMobileMenuOpen, className }: AppHeaderProps) {
+export function AppHeader({ onNavigate, onToggleMobileMenu, isMobileMenuOpen, className }: AppHeaderProps) {
   return (
-    <header className={`sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${className}`}>
-      <div className="container flex h-14 items-center justify-between">
+    <header className={`sticky top-0 z-50 w-full border-b-2 bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 ${className}`}>
+      <div className="container flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo and Navigation */}
-        <div className="flex items-center space-x-6">
-          <div className="flex items-center space-x-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+        <div className="flex items-center space-x-8">
+          <div className="flex items-center space-x-3">
+            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm">
               <span className="text-primary-foreground font-bold text-sm">SA</span>
             </div>
-            <span className="font-semibold">String Art Generator</span>
+            <span className="text-heading-sm font-semibold hidden sm:block">String Art Generator</span>
+            <span className="text-heading-sm font-semibold sm:hidden">String Art</span>
           </div>
           
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
+          <nav className="hidden md:flex items-center space-x-8">
             <button 
               onClick={() => onNavigate?.('generator')}
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
+              className="text-body-sm font-medium transition-all duration-200 hover:text-brand text-subtle hover:scale-105"
             >
               Generator
             </button>
             <button 
               onClick={() => onNavigate?.('tutorial')}
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
+              className="text-body-sm font-medium transition-all duration-200 hover:text-brand text-subtle hover:scale-105"
             >
               Tutorial
             </button>
             <button 
               onClick={() => onNavigate?.('gallery')}
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
+              className="text-body-sm font-medium transition-all duration-200 hover:text-brand text-subtle hover:scale-105"
             >
               Gallery
             </button>
             <button 
               onClick={() => onNavigate?.('faq')}
-              className="transition-colors hover:text-foreground/80 text-foreground/60"
+              className="text-body-sm font-medium transition-all duration-200 hover:text-brand text-subtle hover:scale-105"
             >
               FAQ
             </button>
@@ -52,44 +52,44 @@ export function AppHeader({ onNavigate, onShowHelp, onToggleMobileMenu, isMobile
         </div>
 
         {/* Actions */}
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-3">
           {/* Mobile menu button */}
           <Button 
             variant="ghost" 
             size="sm"
-            className="md:hidden"
+            className="md:hidden p-2 h-10 w-10 hover:bg-accent transition-colors"
             onClick={onToggleMobileMenu}
           >
-            <Menu className="h-4 w-4" />
+            <Menu className="h-5 w-5" />
           </Button>
         </div>
       </div>
       
       {/* Mobile Navigation Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-t bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-          <nav className="container py-4 space-y-2">
+        <div className="md:hidden border-t-2 bg-background/98 backdrop-blur-md supports-[backdrop-filter]:bg-background/90 shadow-lg">
+          <nav className="container py-6 space-y-1 px-4">
             <button 
               onClick={() => onNavigate?.('generator')}
-              className="block w-full text-left py-3 px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md"
+              className="block w-full text-left py-4 px-4 text-body-sm font-medium transition-all duration-200 hover:bg-accent hover:text-accent-foreground rounded-lg active:scale-98"
             >
               Generator
             </button>
             <button 
               onClick={() => onNavigate?.('tutorial')}
-              className="block w-full text-left py-3 px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md"
+              className="block w-full text-left py-4 px-4 text-body-sm font-medium transition-all duration-200 hover:bg-accent hover:text-accent-foreground rounded-lg active:scale-98"
             >
               Tutorial
             </button>
             <button 
               onClick={() => onNavigate?.('gallery')}
-              className="block w-full text-left py-3 px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md"
+              className="block w-full text-left py-4 px-4 text-body-sm font-medium transition-all duration-200 hover:bg-accent hover:text-accent-foreground rounded-lg active:scale-98"
             >
               Gallery
             </button>
             <button 
               onClick={() => onNavigate?.('faq')}
-              className="block w-full text-left py-3 px-4 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md"
+              className="block w-full text-left py-4 px-4 text-body-sm font-medium transition-all duration-200 hover:bg-accent hover:text-accent-foreground rounded-lg active:scale-98"
             >
               FAQ
             </button>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { 
+import type { 
   AppContent, 
   TutorialSection, 
   GallerySection, 

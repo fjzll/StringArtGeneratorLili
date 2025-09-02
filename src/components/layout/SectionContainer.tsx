@@ -13,16 +13,16 @@ interface SectionContainerProps {
 export const SectionContainer = forwardRef<HTMLDivElement, SectionContainerProps>(
   ({ id, className, children, variant = "default", spacing = "normal", centered = false, ...props }, ref) => {
     const spacingClasses = {
-      minimal: "py-4 md:py-6",
-      compact: "py-8 md:py-12",
-      normal: "py-12 md:py-16 lg:py-20",
-      large: "py-16 md:py-24 lg:py-32"
+      minimal: "py-6 md:py-8 lg:py-10",
+      compact: "py-10 md:py-14 lg:py-18",
+      normal: "py-16 md:py-20 lg:py-24",
+      large: "py-20 md:py-28 lg:py-36"
     }
 
     const variantClasses = {
       default: "",
       glass: "glass-effect",
-      bordered: "border border-border rounded-lg"
+      bordered: "border-2 border-border rounded-xl"
     }
 
     return (
@@ -30,7 +30,7 @@ export const SectionContainer = forwardRef<HTMLDivElement, SectionContainerProps
         ref={ref}
         id={id}
         className={cn(
-          "w-full scroll-mt-16", // Account for sticky header
+          "w-full scroll-mt-20", // Account for sticky header (increased from 16 to 20)
           spacingClasses[spacing],
           variantClasses[variant],
           className
@@ -57,7 +57,7 @@ export function HeroSection({ children, ...props }: Omit<SectionContainerProps, 
   return (
     <SectionContainer 
       variant="default" 
-      spacing="minimal" 
+      spacing="compact" 
       centered
       {...props}
     >

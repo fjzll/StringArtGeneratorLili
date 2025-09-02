@@ -1,4 +1,4 @@
-import { AppContent, TutorialSection, GallerySection, FAQSection, AssetInfo } from '@/types/content'
+import type { AppContent, TutorialSection, GallerySection, FAQSection, AssetInfo } from '@/types/content'
 
 // Asset path resolver
 export class AssetResolver {

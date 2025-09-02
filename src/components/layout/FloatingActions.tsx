@@ -141,7 +141,7 @@ export function FloatingActions({
           <Button
             variant="default"
             size="lg"
-            onClick={(e) => {
+            onClick={() => {
               primaryAction.onClick()
             }}
             onBlur={() => {

@@ -5,8 +5,7 @@ import type { StringArtResult, OptimizationProgress } from './types'
 // Layout Components
 import { 
   AppHeader, 
-  HeroSection, 
-  ContentSection,
+  HeroSection,
   NavigationDots,
   FloatingActions 
 } from './components/layout'
@@ -353,7 +352,6 @@ function App() {
       {/* Header */}
       <AppHeader 
         onNavigate={handleNavigation}
-        onShowHelp={() => handleNavigation('faq')}
         onToggleMobileMenu={toggleMobileMenu}
         isMobileMenuOpen={isMobileMenuOpen}
       />
@@ -375,24 +373,32 @@ function App() {
       <main>
         {/* Hero Section */}
         <HeroSection id="generator">
-          <div className="text-center space-y-4 sm:space-y-6">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight px-4">
-              String Art Generator
-            </h1>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
-              Transform your photos into beautiful mathematical string art using advanced algorithms and customizable presets.
-            </p>
+          <div className="text-center space-y-6 sm:space-y-8">
+            <div className="space-y-4">
+              <h1 className="text-display-md sm:text-display-lg lg:text-display-xl font-extrabold tracking-tight px-4 bg-gradient-to-b from-foreground to-foreground/80 bg-clip-text text-transparent">
+                String Art Generator
+              </h1>
+              <p className="text-body-lg sm:text-heading-sm text-muted-foreground max-w-3xl mx-auto px-4 leading-relaxed">
+                Transform your photos into beautiful mathematical string art using advanced algorithms and customizable presets.
+              </p>
+            </div>
+            <div className="text-caption text-brand font-medium px-4">
+              AI-Powered • Mathematical Precision • Exhibition Quality
+            </div>
           </div>
         </HeroSection>
 
         {/* Generator Section */}
-        <div className="w-full scroll-mt-16 py-4 md:py-6">
+        <div className="w-full scroll-mt-16 py-8 md:py-12 lg:py-16">
           <div className="container-apple">
-            <div className="space-y-6 sm:space-y-8">
+            <div className="space-y-8 sm:space-y-10 lg:space-y-12">
           {/* Image Upload Area */}
-          <Card className="card-hover">
-            <CardHeader>
-              <CardTitle>Upload Your Image</CardTitle>
+          <Card className="card-hover border-2">
+            <CardHeader className="pb-6">
+              <CardTitle className="text-heading-lg font-semibold">Upload Your Image</CardTitle>
+              <p className="text-body-sm text-subtle mt-2">
+                Choose a high-contrast photo for the best string art results. JPG, PNG, and WebP formats are supported.
+              </p>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -435,7 +441,7 @@ function App() {
                         alt="Selected" 
                         className="max-w-full h-auto mx-auto max-h-48 sm:max-h-64 object-contain rounded-lg shadow-sm"
                       />
-                      <p className="text-sm text-muted-foreground">
+                      <p className="text-body-sm text-subtle">
                         Tap to change image
                       </p>
                     </div>
@@ -445,13 +451,13 @@ function App() {
                         {isDragOver ? '🎯' : '📸'}
                       </div>
                       <div className="space-y-2">
-                        <p className="text-base sm:text-lg font-medium">
+                        <p className="text-heading-sm font-medium">
                           {isDragOver ? 'Drop your image here!' : 'Drop your image here'}
                         </p>
-                        <p className="text-sm text-muted-foreground px-4">
+                        <p className="text-body-sm text-subtle px-4">
                           {isDragOver 
                             ? 'Release to upload your image' 
-                            : 'or tap to browse • JPG, PNG, WebP supported'
+                            : 'or tap to browse files'
                           }
                         </p>
                       </div>
@@ -465,9 +471,12 @@ function App() {
           {/* Preset Selection */}
           <div className={!selectedImage ? "opacity-50" : ""}>
             {/* Preset Selection */}
-            <Card className="card-hover">
-              <CardHeader>
-                <CardTitle>Choose Style Preset</CardTitle>
+            <Card className="card-hover border-2">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-heading-lg font-semibold">Choose Style Preset</CardTitle>
+                <p className="text-body-sm text-subtle mt-2">
+                  Each preset is optimized for different image types and artistic styles. Fine-tune with advanced settings if needed.
+                </p>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
@@ -488,10 +497,10 @@ function App() {
                         }
                       }}
                     >
-                      <CardContent className="p-4 sm:p-6 text-center min-h-[120px] sm:min-h-[140px] flex flex-col justify-center">
-                        <div className="text-3xl sm:text-4xl mb-2 sm:mb-3">{preset.icon}</div>
-                        <h3 className="font-semibold mb-1 sm:mb-2 text-sm sm:text-base">{preset.name}</h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      <CardContent className="p-5 sm:p-6 text-center min-h-[140px] sm:min-h-[160px] flex flex-col justify-center">
+                        <div className="text-4xl sm:text-5xl mb-3 sm:mb-4">{preset.icon}</div>
+                        <h3 className="text-heading-sm font-semibold mb-2">{preset.name}</h3>
+                        <p className="text-body-sm text-subtle leading-relaxed">
                           {preset.description}
                         </p>
                       </CardContent>
@@ -500,17 +509,17 @@ function App() {
                 </div>
                 
                 {/* Advanced Settings Accordion */}
-                <div className="mt-6 pt-6 border-t border-border">
+                <div className="mt-8 pt-8 border-t border-border">
                   <Accordion type="single" collapsible>
                     <AccordionItem value="advanced-settings">
-                      <AccordionTrigger className="hover:no-underline">
+                      <AccordionTrigger className="hover:no-underline text-heading-sm font-medium">
                         Advanced Settings
                       </AccordionTrigger>
                       <AccordionContent>
-                        <div className="space-y-6 pt-2">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-8 pt-4">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div>
-                              <label className="block text-sm font-medium mb-2">
+                              <label className="block text-body-sm font-medium mb-3 text-emphasis">
                                 Number of Pins: {numberOfPins}
                               </label>
                               <input
@@ -527,7 +536,7 @@ function App() {
                                 <span>36 (fast)</span>
                                 <span>360 (detailed)</span>
                               </div>
-                              <p className="text-xs text-muted-foreground mt-1">
+                              <p className="text-body-sm text-subtle mt-2 leading-relaxed">
                                 More pins create finer detail but increase processing time.
                               </p>
                             </div>
@@ -602,9 +611,9 @@ function App() {
                             </div>
                           </div>
                           
-                          <div className="bg-muted/50 rounded-lg p-4">
-                            <h4 className="text-sm font-medium mb-2">💡 Tips for Best Results</h4>
-                            <ul className="text-xs text-muted-foreground space-y-1">
+                          <div className="bg-muted/50 rounded-lg p-6">
+                            <h4 className="text-heading-sm font-medium mb-3 text-brand">💡 Pro Tips</h4>
+                            <ul className="text-body-sm text-subtle space-y-2">
                               <li>• Use high contrast images for better definition</li>
                               <li>• Portrait photos work best with 288+ pins</li>
                               <li>• Start with presets, then fine-tune if needed</li>
@@ -625,7 +634,7 @@ function App() {
               onClick={generateArt}
               disabled={!selectedImage || isProcessing}
               size="lg"
-              className="w-full px-8 py-4 sm:py-6 text-base sm:text-lg font-semibold min-h-[52px] sm:min-h-[60px] active:scale-[0.98] transition-transform"
+              className="w-full px-8 py-6 sm:py-8 text-heading-sm font-semibold min-h-[60px] sm:min-h-[72px] active:scale-[0.98] transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               {isProcessing ? (
                 <div className="flex items-center gap-2">
@@ -639,24 +648,26 @@ function App() {
 
           {/* Progress Display */}
           {progress && (
-            <Card className="glass-effect">
-              <CardContent className="p-6">
-                <div className="space-y-4">
+            <Card className="glass-effect border-2">
+              <CardContent className="p-8">
+                <div className="space-y-6">
                   <div className="flex justify-between items-center">
-                    <h3 className="font-semibold">Generating Your String Art</h3>
-                    <span className="text-sm text-muted-foreground">
+                    <h3 className="text-heading-md font-semibold">Generating Your String Art</h3>
+                    <span className="text-heading-sm font-medium text-brand">
                       {progress.percentComplete.toFixed(1)}%
                     </span>
                   </div>
                   
                   <Progress value={progress.percentComplete} className="w-full" />
                   
-                  <div className="grid grid-cols-2 gap-4 text-sm text-muted-foreground">
-                    <div>
-                      Lines: {progress.linesDrawn} / {progress.totalLines}
+                  <div className="grid grid-cols-2 gap-6 text-body-sm text-subtle">
+                    <div className="space-y-1">
+                      <div className="text-caption text-emphasis">LINES DRAWN</div>
+                      <div className="font-medium">{progress.linesDrawn} / {progress.totalLines}</div>
                     </div>
-                    <div>
-                      Thread: {progress.threadLength.toFixed(2)}″
+                    <div className="space-y-1">
+                      <div className="text-caption text-emphasis">THREAD LENGTH</div>
+                      <div className="font-medium">{progress.threadLength.toFixed(2)}″</div>
                     </div>
                   </div>
                 </div>
@@ -666,18 +677,27 @@ function App() {
 
           {/* Error Display */}
           {error && (
-            <Card className="border-destructive bg-destructive/5">
-              <CardContent className="p-4">
-                <p className="text-destructive text-sm">{error}</p>
+            <Card className="border-destructive bg-destructive/5 border-2">
+              <CardContent className="p-6">
+                <div className="flex items-start space-x-3">
+                  <div className="text-2xl">⚠️</div>
+                  <div>
+                    <h4 className="text-heading-sm font-medium text-destructive mb-2">Generation Error</h4>
+                    <p className="text-body-sm text-destructive/80">{error}</p>
+                  </div>
+                </div>
               </CardContent>
             </Card>
           )}
 
           {/* Canvas Results */}
           {(progress || result) && (
-            <Card className="card-hover">
-              <CardHeader>
-                <CardTitle>String Art Result</CardTitle>
+            <Card className="card-hover border-2">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-heading-lg font-semibold">String Art Result</CardTitle>
+                <p className="text-body-sm text-subtle mt-2">
+                  Your generated string art with mathematical precision and artistic beauty.
+                </p>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -690,30 +710,43 @@ function App() {
                   />
                   
                   {result && (
-                    <div className="bg-muted/50 rounded-lg p-4 space-y-2 text-sm">
-                      <div className="grid grid-cols-2 gap-2">
-                        <div><strong>Processing:</strong> {(result.processingTimeMs / 1000).toFixed(1)}s</div>
-                        <div><strong>Lines:</strong> {result.lineSequence.length}</div>
-                        <div><strong>Thread:</strong> {result.totalThreadLength.toFixed(2)}″</div>
-                        <div><strong>Pins:</strong> {result.parameters.numberOfPins}</div>
+                    <div className="bg-muted/50 rounded-lg p-6 space-y-4">
+                      <h4 className="text-heading-sm font-medium text-emphasis mb-4">Generation Details</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="space-y-1">
+                          <div className="text-caption text-emphasis">PROCESSING TIME</div>
+                          <div className="text-body-sm font-medium">{(result.processingTimeMs / 1000).toFixed(1)}s</div>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="text-caption text-emphasis">TOTAL LINES</div>
+                          <div className="text-body-sm font-medium">{result.lineSequence.length}</div>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="text-caption text-emphasis">THREAD LENGTH</div>
+                          <div className="text-body-sm font-medium">{result.totalThreadLength.toFixed(2)}″</div>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="text-caption text-emphasis">ANCHOR PINS</div>
+                          <div className="text-body-sm font-medium">{result.parameters.numberOfPins}</div>
+                        </div>
                       </div>
                       
-                      <div className="flex flex-col sm:flex-row gap-2 pt-4">
+                      <div className="flex flex-col sm:flex-row gap-3 pt-6">
                         <Button 
                           variant="outline" 
-                          className="flex-1 min-h-[44px] active:scale-[0.98] transition-transform"
+                          className="flex-1 min-h-[52px] text-body-sm font-medium active:scale-[0.98] transition-all duration-200"
                           onClick={handleDownload}
                         >
                           <span className="mr-2">📥</span>
-                          Download
+                          Download PNG
                         </Button>
                         <Button 
                           variant="outline" 
-                          className="flex-1 min-h-[44px] active:scale-[0.98] transition-transform"
+                          className="flex-1 min-h-[52px] text-body-sm font-medium active:scale-[0.98] transition-all duration-200"
                           onClick={handleTryAgain}
                         >
                           <span className="mr-2">🔄</span>
-                          Try Again
+                          Create New
                         </Button>
                       </div>
                     </div>
@@ -723,6 +756,13 @@ function App() {
             </Card>
           )}
             </div>
+          </div>
+        </div>
+
+        {/* Visual Separator */}
+        <div className="w-full py-8">
+          <div className="container-apple">
+            <div className="h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
           </div>
         </div>
 

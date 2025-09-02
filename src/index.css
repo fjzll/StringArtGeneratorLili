@@ -24,6 +24,18 @@
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     
+    /* Success color (Apple Green) */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 98%;
+    
+    /* Warning color (Apple Orange) */
+    --warning: 32 95% 44%;
+    --warning-foreground: 0 0% 98%;
+    
+    /* Info color (Apple Blue variation) */
+    --info: 200 98% 39%;
+    --info-foreground: 0 0% 98%;
+    
     /* Muted backgrounds */
     --muted: 210 40% 96%;
     --muted-foreground: 215.4 16.3% 46.9%;
@@ -39,6 +51,45 @@
     
     /* Border radius */
     --radius: 12px;
+    
+    /* Typography Scale */
+    --font-size-xs: 0.75rem;     /* 12px */
+    --font-size-sm: 0.875rem;    /* 14px */
+    --font-size-base: 1rem;      /* 16px */
+    --font-size-lg: 1.125rem;    /* 18px */
+    --font-size-xl: 1.25rem;     /* 20px */
+    --font-size-2xl: 1.5rem;     /* 24px */
+    --font-size-3xl: 1.875rem;   /* 30px */
+    --font-size-4xl: 2.25rem;    /* 36px */
+    --font-size-5xl: 3rem;       /* 48px */
+    --font-size-6xl: 3.75rem;    /* 60px */
+    --font-size-7xl: 4.5rem;     /* 72px */
+    
+    /* Line Heights */
+    --line-height-xs: 1rem;      /* 16px */
+    --line-height-sm: 1.25rem;   /* 20px */
+    --line-height-base: 1.5rem;  /* 24px */
+    --line-height-lg: 1.75rem;   /* 28px */
+    --line-height-xl: 1.75rem;   /* 28px */
+    --line-height-2xl: 2rem;     /* 32px */
+    --line-height-3xl: 2.25rem;  /* 36px */
+    --line-height-4xl: 2.5rem;   /* 40px */
+    --line-height-5xl: 1;        /* Tight for display text */
+    --line-height-6xl: 1;        /* Tight for display text */
+    --line-height-7xl: 1;        /* Tight for display text */
+    
+    /* Letter Spacing */
+    --letter-spacing-tight: -0.025em;
+    --letter-spacing-normal: 0em;
+    --letter-spacing-wide: 0.025em;
+    
+    /* Font Weights */
+    --font-weight-light: 300;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-extrabold: 800;
   }
 
   .dark {
@@ -61,6 +112,18 @@
     /* Apple red destructive */
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
+    
+    /* Success color (brighter in dark) */
+    --success: 142 76% 45%;
+    --success-foreground: 0 0% 98%;
+    
+    /* Warning color (brighter in dark) */
+    --warning: 32 95% 54%;
+    --warning-foreground: 0 0% 98%;
+    
+    /* Info color (brighter in dark) */
+    --info: 200 98% 48%;
+    --info-foreground: 0 0% 98%;
     
     /* Dark muted backgrounds */
     --muted: 217.2 32.6% 17.5%;
@@ -117,15 +180,15 @@
 
   /* Apple-style card hover */
   .card-hover {
-    @apply transition-all duration-200 ease-out;
-    @apply hover:shadow-lg hover:shadow-black/5;
-    @apply hover:-translate-y-0.5;
+    @apply transition-all duration-300 ease-out;
+    @apply hover:shadow-xl hover:shadow-black/10;
+    @apply hover:-translate-y-1 hover:scale-[1.01];
   }
 
   /* Subtle button press effect */
   .button-press {
-    @apply transition-transform duration-100 ease-out;
-    @apply active:scale-95;
+    @apply transition-all duration-150 ease-out;
+    @apply active:scale-95 active:brightness-95;
   }
 
   /* Apple-style section spacing */
@@ -137,5 +200,190 @@
   .container-apple {
     @apply container mx-auto px-4 sm:px-6 lg:px-8;
     max-width: 1200px;
+  }
+
+  /* Typography Classes */
+  .text-display-xl {
+    font-size: var(--font-size-7xl);
+    line-height: var(--line-height-7xl);
+    font-weight: var(--font-weight-extrabold);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  .text-display-lg {
+    font-size: var(--font-size-6xl);
+    line-height: var(--line-height-6xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  .text-display-md {
+    font-size: var(--font-size-5xl);
+    line-height: var(--line-height-5xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  .text-display-sm {
+    font-size: var(--font-size-4xl);
+    line-height: var(--line-height-4xl);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  .text-heading-xl {
+    font-size: var(--font-size-3xl);
+    line-height: var(--line-height-3xl);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+
+  .text-heading-lg {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-2xl);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+
+  .text-heading-md {
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-xl);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+
+  .text-heading-sm {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-lg);
+    font-weight: var(--font-weight-semibold);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+
+  .text-body-lg {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-lg);
+    font-weight: var(--font-weight-normal);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+
+  .text-body-md {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-base);
+    font-weight: var(--font-weight-normal);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+
+  .text-body-sm {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-sm);
+    font-weight: var(--font-weight-normal);
+    letter-spacing: var(--letter-spacing-normal);
+  }
+
+  .text-caption {
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-xs);
+    font-weight: var(--font-weight-medium);
+    letter-spacing: var(--letter-spacing-wide);
+    text-transform: uppercase;
+  }
+
+  /* Text variants */
+  .text-subtle {
+    color: hsl(var(--muted-foreground));
+  }
+
+  .text-emphasis {
+    color: hsl(var(--foreground));
+    font-weight: var(--font-weight-medium);
+  }
+
+  .text-brand {
+    color: hsl(var(--primary));
+    font-weight: var(--font-weight-medium);
+  }
+
+  .text-success {
+    color: hsl(var(--success));
+  }
+
+  .text-warning {
+    color: hsl(var(--warning));
+  }
+
+  .text-error {
+    color: hsl(var(--destructive));
+  }
+
+  .text-info {
+    color: hsl(var(--info));
+  }
+
+  /* Gradient backgrounds */
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary) / 0.8) 100%);
+  }
+
+  .bg-gradient-success {
+    background: linear-gradient(135deg, hsl(var(--success)) 0%, hsl(var(--success) / 0.8) 100%);
+  }
+
+  .bg-gradient-warning {
+    background: linear-gradient(135deg, hsl(var(--warning)) 0%, hsl(var(--warning) / 0.8) 100%);
+  }
+
+  .bg-gradient-subtle {
+    background: linear-gradient(135deg, hsl(var(--muted)) 0%, hsl(var(--muted) / 0.3) 100%);
+  }
+
+  /* Enhanced glass effect */
+  .glass-enhanced {
+    backdrop-filter: blur(24px) saturate(180%);
+    background-color: hsla(var(--background) / 0.85);
+    border: 2px solid hsla(var(--border) / 0.3);
+    box-shadow: 0 8px 32px hsla(var(--foreground) / 0.08);
+  }
+
+  /* Animated gradient border */
+  .gradient-border {
+    position: relative;
+    background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--primary) / 0.6), hsl(var(--primary)));
+    background-size: 200% 100%;
+    animation: gradient-shift 3s ease infinite;
+  }
+
+  @keyframes gradient-shift {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  /* Enhanced focus states */
+  .focus-enhanced:focus-visible {
+    outline: 3px solid hsl(var(--primary) / 0.3);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 2px hsl(var(--primary));
+  }
+
+  /* Smooth scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--muted) / 0.3);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.5);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.7);
   }
 }
