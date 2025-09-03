@@ -14,7 +14,7 @@ import {
 
 // UI Components  
 import { Button } from './components/ui/button'
-import { Card, CardHeader, CardTitle, CardContent } from './components/ui/card'
+import { Card, CardHeader, CardContent } from './components/ui/card'
 import { Progress } from './components/ui/progress'
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from './components/ui/accordion'
 import { CanvasErrorBoundary } from './components/ui/canvas-error-boundary'
@@ -447,6 +447,22 @@ function App() {
 
 
 
+      {/* SEO Content - Hidden but crawlable */}
+      <div className="sr-only">
+        <h2>Mathematical String Art Generator Tool</h2>
+        <p>Our advanced string art generator uses mathematical algorithms to convert photos into string art patterns. Perfect for creating mathematical art, educational demonstrations, and DIY crafts. Features include:</p>
+        <ul>
+          <li>Convert photo to string art using algorithmic optimization</li>
+          <li>Mathematical string art with precise calculations</li>
+          <li>Educational tool for art and mathematics intersection</li>
+          <li>DIY string art patterns for physical creation</li>
+          <li>Customizable pins, lines, and artistic presets</li>
+          <li>Real-time generation with progress tracking</li>
+        </ul>
+        <h3>How String Art Algorithms Work</h3>
+        <p>String art generation involves complex mathematical optimization to determine optimal line sequences between pins that recreate image patterns using thread connections.</p>
+      </div>
+
       {/* Main Content */}
       <main>
         {/* Hero Section */}
@@ -454,10 +470,10 @@ function App() {
           <div className="text-center space-y-6 sm:space-y-8">
             <div className="space-y-4">
               <h1 className="text-display-md sm:text-display-lg lg:text-display-xl font-extrabold tracking-tight px-4 bg-gradient-to-b from-foreground to-foreground/80 bg-clip-text text-transparent">
-                String Art Generator
+                String Art Generator - Convert Photos to Mathematical String Art
               </h1>
               <p className="text-body-lg sm:text-heading-sm text-muted-foreground max-w-3xl mx-auto px-4 leading-relaxed">
-                Transform your photos into beautiful mathematical string art using advanced algorithms and customizable presets.
+                Transform your photos into beautiful mathematical string art using advanced algorithms and customizable presets. Perfect for educators, artists, and DIY enthusiasts.
               </p>
             </div>
             <div className="text-caption text-brand font-medium px-4">
@@ -473,7 +489,7 @@ function App() {
           {/* Image Upload Area */}
           <Card className="card-hover border-2">
             <CardHeader className="pb-6">
-              <CardTitle className="text-heading-lg font-semibold">Upload Your Image</CardTitle>
+              <h2 className="text-heading-lg font-semibold">Upload Your Image</h2>
               <p className="text-body-sm text-subtle mt-2">
                 Choose a high-contrast photo for the best string art results. JPG, PNG, and WebP formats are supported.
               </p>
@@ -552,7 +568,7 @@ function App() {
             {/* Preset Selection */}
             <Card className="card-hover border-2">
               <CardHeader className="pb-6">
-                <CardTitle className="text-heading-lg font-semibold">Choose Style Preset</CardTitle>
+                <h2 className="text-heading-lg font-semibold">Choose Style Preset</h2>
                 <p className="text-body-sm text-subtle mt-2">
                   Each preset is optimized for different image types and artistic styles. Fine-tune with advanced settings if needed.
                 </p>
@@ -714,7 +730,7 @@ function App() {
           {(progress || result) && (
             <Card id="string-art-result" className="card-hover border-2 scroll-mt-20">
               <CardHeader className="pb-6">
-                <CardTitle className="text-heading-lg font-semibold">String Art Result</CardTitle>
+                <h2 className="text-heading-lg font-semibold">String Art Result</h2>
                 <p className="text-body-sm text-subtle mt-2">
                   Your generated string art with mathematical precision and artistic beauty.
                 </p>

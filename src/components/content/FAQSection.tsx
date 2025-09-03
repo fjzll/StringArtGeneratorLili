@@ -5,6 +5,91 @@ import { Button } from "@/components/ui/button"
 import { ContentSection } from "@/components/layout"
 import { Search, ChevronRight } from "lucide-react"
 
+// SEO-friendly inline FAQ content - ensures search engines can crawl FAQ content
+const FAQ_SEO_CONTENT = {
+  title: "Frequently Asked Questions",
+  description: "Find answers to common questions about string art generation",
+  categories: [
+    {
+      id: "getting-started",
+      name: "Getting Started",
+      description: "Basic questions for new users",
+      icon: "🚀",
+      questions: [
+        {
+          id: "what-is-string-art",
+          question: "What is string art and how does this generator work?",
+          answer: "String art is a traditional craft where thread is wound between pins to create images. Our generator uses computer algorithms to analyze your photo and calculate the optimal sequence of lines between pins that will recreate your image using just thread. The result is a pattern you can follow to create physical string art."
+        },
+        {
+          id: "what-images-work-best",
+          question: "What types of images work best for string art?",
+          answer: "High contrast images with clear light and dark areas work best. Portraits, architectural photos, and images with defined shadows produce excellent results. Avoid very busy or low-contrast images as they may not translate well to the limited resolution of string art."
+        }
+      ]
+    },
+    {
+      id: "technical",
+      name: "Technical",
+      description: "How the algorithms and settings work",
+      icon: "⚙️",
+      questions: [
+        {
+          id: "how-many-pins",
+          question: "How many pins should I use?",
+          answer: "For beginners, start with 144-216 pins for a good balance of detail and complexity. More pins (288-360) allow finer detail but require more precision. Fewer pins (36-120) create bold, minimalist designs that are easier to recreate physically."
+        },
+        {
+          id: "generation-time",
+          question: "Why does generation take so long?",
+          answer: "The algorithm considers thousands of possible lines to find the optimal sequence. More pins and lines exponentially increase computation time. Generation typically takes 30 seconds to 2 minutes depending on your settings and device performance."
+        },
+        {
+          id: "mobile-support",
+          question: "Does this work on mobile devices?",
+          answer: "Yes! The generator is fully responsive and works on phones and tablets. However, complex generations with many pins and lines may be slower on mobile devices. We recommend starting with simpler settings on mobile."
+        }
+      ]
+    },
+    {
+      id: "troubleshooting",
+      name: "Troubleshooting",
+      description: "Common issues and solutions",
+      icon: "🔧",
+      questions: [
+        {
+          id: "blank-result",
+          question: "Why is my result blank or very light?",
+          answer: "This usually means your image has low contrast or the settings don't match your image type. Try increasing the line weight, adding more lines, or choosing an image with stronger contrast between light and dark areas."
+        },
+        {
+          id: "too-dark",
+          question: "My string art is too dark or heavy?",
+          answer: "Reduce the number of lines, decrease the line weight, or increase the minimum distance between pins. Dark, high-contrast images often need fewer lines to look good as string art."
+        }
+      ]
+    },
+    {
+      id: "advanced",
+      name: "Advanced",
+      description: "Tips for experienced users",
+      icon: "⚡",
+      questions: [
+        {
+          id: "physical-recreation",
+          question: "How do I recreate this physically?",
+          answer: "You'll need a circular frame, pins/nails, and thread. Mark pin positions evenly around your frame, then follow the generated line sequence, winding thread from pin to pin in order. The downloadable result shows the complete pattern."
+        },
+        {
+          id: "thread-length",
+          question: "How much thread do I need?",
+          answer: "The generator shows estimated thread length in the results. Generally, you'll need 200-1000 inches of thread depending on your settings. We recommend having 20% extra thread to account for mistakes and adjustments."
+        }
+      ]
+    }
+  ]
+}
+
 interface FAQQuestion {
   id: string
   question: string
@@ -14,13 +99,15 @@ interface FAQQuestion {
 interface FAQCategory {
   id: string
   name: string
+  description?: string
   icon: string
   questions: FAQQuestion[]
 }
 
 interface FAQData {
   title: string
-  subtitle: string
+  description?: string
+  subtitle?: string
   categories: FAQCategory[]
   contact?: {
     title: string
@@ -34,35 +121,45 @@ interface FAQData {
 }
 
 export function FAQSection() {
-  const [faqData, setFaqData] = useState<FAQData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [faqData, setFaqData] = useState<FAQData | null>(FAQ_SEO_CONTENT)
+  const [loading] = useState(false) // Start with SEO content loaded
+  const [error] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
 
 
   useEffect(() => {
-    // Lazy load FAQ content
-    const loadFAQContent = async () => {
+    // Optional: Load fresh content from JSON to override SEO content
+    const loadFreshContent = async () => {
       try {
         const response = await fetch('/content/faq/faq.json')
-        if (!response.ok) {
-          throw new Error('Failed to load FAQ content')
+        if (response.ok) {
+          const data = await response.json()
+          // Transform the data to match our interface if needed
+          const transformedData = {
+            title: data.title,
+            description: data.description,
+            subtitle: data.description, // For backward compatibility
+            categories: data.categories.map((cat: any) => ({
+              ...cat,
+              questions: data.items ? data.items.filter((item: any) => item.category === cat.id) : cat.questions || []
+            }))
+          }
+          // Only update if the fetched data is significantly different
+          if (transformedData.categories.length > 0) {
+            setFaqData(transformedData)
+          }
         }
-        const data = await response.json()
-        setFaqData(data)
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load FAQ')
-        console.error('FAQ loading error:', err)
-      } finally {
-        setLoading(false)
+        // Silently fail - SEO content is already loaded
+        console.info('Using embedded FAQ content for SEO')
       }
     }
 
-    // Use Intersection Observer to lazy load when section comes into view
+    // Use Intersection Observer for performance optimization
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !faqData) {
-          loadFAQContent()
+        if (entry.isIntersecting) {
+          loadFreshContent()
         }
       },
       { threshold: 0.1 }
@@ -78,7 +175,7 @@ export function FAQSection() {
         observer.unobserve(section)
       }
     }
-  }, [faqData, loading])
+  }, [])
 
   if (loading) {
     return (
@@ -133,7 +230,7 @@ export function FAQSection() {
       <div className="text-center space-y-4">
         <h2 className="text-3xl md:text-4xl font-bold">{faqData.title}</h2>
         <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
-          {faqData.subtitle}
+          {faqData.subtitle || faqData.description}
         </p>
       </div>
 
