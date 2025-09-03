@@ -67,3 +67,6 @@ export default tseslint.config([
   },
 ])
 ```
+
+<!-- Auto-deployment test -->
+test auto-deployment
