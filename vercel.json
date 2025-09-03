@@ -1,5 +1,4 @@
 {
-  "name": "string-art-generator-lili",
   "rewrites": [
     {
       "source": "/(.*)",
@@ -17,7 +16,7 @@
       ]
     },
     {
-      "source": "/(.*\\.(js|css|svg|png|jpg|jpeg|gif|webp|woff|woff2))",
+      "source": "/(.*\\.(js|css|svg|png|jpg|jpeg|gif|webp|woff2?))",
       "headers": [
         {
           "key": "Cache-Control", 
