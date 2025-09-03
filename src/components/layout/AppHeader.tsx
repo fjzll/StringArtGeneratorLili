@@ -14,13 +14,21 @@ export function AppHeader({ onNavigate, onToggleMobileMenu, isMobileMenuOpen, cl
       <div className="container flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo and Navigation */}
         <div className="flex items-center space-x-8">
-          <div className="flex items-center space-x-3">
-            <div className="h-9 w-9 rounded-xl bg-gradient-to-br from-primary to-primary/80 flex items-center justify-center shadow-sm">
-              <span className="text-primary-foreground font-bold text-sm">SA</span>
+          <button 
+            onClick={() => onNavigate?.('generator')}
+            className="flex items-center space-x-3 hover:opacity-80 transition-opacity cursor-pointer"
+            aria-label="Go to String Art Generator home"
+          >
+            <div className="h-9 w-9 flex items-center justify-center">
+              <img 
+                src="/favicon.svg" 
+                alt="String Art Generator Logo"
+                className="h-8 w-8"
+              />
             </div>
             <span className="text-heading-sm font-semibold hidden sm:block">String Art Generator</span>
             <span className="text-heading-sm font-semibold sm:hidden">String Art</span>
-          </div>
+          </button>
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-2">
