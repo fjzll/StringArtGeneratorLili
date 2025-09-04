@@ -5,7 +5,7 @@ User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://stringartgenerator.com/sitemap.xml
+Sitemap: https://stringartgenerator.co/sitemap.xml
 
 # Crawl-delay for better server performance
 Crawl-delay: 1

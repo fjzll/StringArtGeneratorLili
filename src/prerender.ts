@@ -175,7 +175,7 @@ export async function prerender(data: { url: string }) {
         // Performance Resource Hints
         { type: 'link', props: { rel: 'preconnect', href: 'https://fonts.googleapis.com' } },
         { type: 'link', props: { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: 'anonymous' } },
-        { type: 'link', props: { rel: 'dns-prefetch', href: 'https://stringartgenerator.com' } },
+        { type: 'link', props: { rel: 'dns-prefetch', href: 'https://stringartgenerator.co' } },
         
         // Critical CSS (inline for above-the-fold content)
         { 
