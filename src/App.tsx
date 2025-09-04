@@ -3,7 +3,6 @@ import { generateStringArt } from './lib/algorithms/stringArtEngine'
 import type { StringArtResult, OptimizationProgress } from './types'
 import { useMobileCanvas } from './hooks/useMobileCanvas'
 import { MobileSlider } from './components/ui/mobile-slider'
-import { LoadingOverlay } from './components/ui/loading-overlay'
 
 // Layout Components
 import { 
@@ -49,9 +48,6 @@ function App() {
   // UI State
   const [selectedPreset, setSelectedPreset] = useState<string>('fine')
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  
-  // Hydration State
-  const [isHydrating, setIsHydrating] = useState(true)
   
   // Refs
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -194,13 +190,21 @@ function App() {
     handleNavigation('generator')
   }
 
-  // Hydration effect - hide loading overlay once React has taken control
+  // Remove HTML loading overlay once React has mounted
   useEffect(() => {
-    // Small delay to ensure React has fully hydrated
-    const timer = setTimeout(() => {
-      setIsHydrating(false)
-    }, 100)
-    
+    const removeLoadingOverlay = () => {
+      const overlay = document.getElementById('loading-overlay')
+      if (overlay) {
+        overlay.classList.add('hide')
+        // Remove completely after animation
+        setTimeout(() => {
+          overlay.remove()
+        }, 300)
+      }
+    }
+
+    // Small delay to ensure smooth transition
+    const timer = setTimeout(removeLoadingOverlay, 100)
     return () => clearTimeout(timer)
   }, [])
 
@@ -449,9 +453,6 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Loading Overlay */}
-      <LoadingOverlay isVisible={isHydrating} />
-      
       {/* Header */}
       <AppHeader 
         onNavigate={handleNavigation}
