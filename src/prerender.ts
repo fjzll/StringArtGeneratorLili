@@ -127,9 +127,9 @@ export async function prerender(data: { url: string }) {
   // Route-specific configurations
   const routeConfig = {
     '/': {
-      title: 'String Art Generator - Transform Photos into Mathematical String Art | Free Online Tool',
-      description: 'Create stunning string art from your photos using our advanced algorithmic generator. Transform images into mathematical masterpieces with customizable pins, lines, and artistic presets. Perfect for educators, artists, and DIY enthusiasts.',
-      keywords: 'string art generator, mathematical string art, convert photo to string art, algorithmic art, DIY string art, educational art tool'
+      title: 'String Art Generator - Transform Photos to String Art',
+      description: 'Transform photos into stunning string art using advanced algorithms. Generate mathematical patterns with customizable pins and lines for physical artwork.',
+      keywords: 'string art generator, free online tool, photo to string art, mathematical art, DIY string art'
     },
     '/#tutorial': {
       title: 'String Art Tutorial - Step by Step Guide | String Art Generator',
