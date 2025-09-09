@@ -1,72 +1,44 @@
-# React + TypeScript + Vite
+# String Art Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Transform your digital photographs into mathematical string art patterns with our sophisticated web application. Using advanced algorithmic processing, convert images into instructions for creating physical string art pieces where thread is wound between pins arranged around a circular hoop.
 
-Currently, two official plugins are available:
+🌐 **Live Demo:** [https://stringartgenerator.co](https://stringartgenerator.co)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## ✨ Features
 
-## Expanding the ESLint configuration
+- **Advanced Image Processing Pipeline**: Automatic square cropping, grayscale conversion, and circular masking
+- **Mathematical String Art Engine**: Algorithmic optimization to determine optimal line sequences
+- **Four Optimized Presets**: Fine Detail, Bold Impact, Soft Portrait, and Professional settings
+- **Interactive Web Interface**: Drag-and-drop upload with mobile-optimized canvas
+- **Real-time Visualization**: Watch the string art generation process with live progress feedback
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 🚀 Quick Start
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+Visit [https://stringartgenerator.co](https://stringartgenerator.co) to start creating string art immediately, or run locally:
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🛠️ Tech Stack
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Frontend**: React 19 + TypeScript + Vite
+- **Styling**: Tailwind CSS + Radix UI
+- **Animation**: Framer Motion
+- **State Management**: Zustand
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🎯 Use Cases
 
-<!-- Auto-deployment test -->
-test auto-deployment
+- **Educational**: Teaching mathematical concepts through visual art
+- **Artistic**: Creating unique string art pieces from personal photos  
+- **Commercial**: Generating string art for galleries or custom orders
+- **Research**: Exploring optimization algorithms and image processing
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📝 License
+
+This project is open source and available under the [MIT License](LICENSE).
