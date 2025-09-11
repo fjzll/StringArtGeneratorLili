@@ -12,4 +12,20 @@
     <lastmod>2025-09-09</lastmod>
   </url>
   
+  <!-- Privacy Policy page -->
+  <url>
+    <loc>https://stringartgenerator.co/privacy.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>2025-09-11</lastmod>
+  </url>
+  
+  <!-- Terms of Service page -->
+  <url>
+    <loc>https://stringartgenerator.co/terms.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
+    <lastmod>2025-09-11</lastmod>
+  </url>
+  
 </urlset>
